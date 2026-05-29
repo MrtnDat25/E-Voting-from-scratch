@@ -1,0 +1,1013 @@
+# DATABASE DESIGN — BLOCKCHAIN-BASED SECURE E-VOTING WITH PAILLIER HOMOMORPHIC ENCRYPTION
+
+# 1. DESIGN GOALS
+
+Hệ thống được thiết kế để đáp ứng:
+
+* secure e-voting
+* anonymity
+* one-vote-per-user
+* homomorphic tallying
+* blockchain auditability
+* threshold trust
+* public/private election
+* research-grade extensibility
+
+Kiến trúc chia thành:
+
+* Off-chain layer (MongoDB)
+* Cryptographic layer
+* Blockchain audit layer
+
+---
+
+# 2. DATABASE ARCHITECTURE
+
+MongoDB chỉ lưu:
+
+* application data
+* encrypted ballots
+* user/account data
+* election metadata
+* audit logs
+
+Blockchain chỉ lưu:
+
+* election hash
+* ballot hash
+* result hash
+* immutable audit records
+
+---
+
+# 3. COLLECTION OVERVIEW
+
+| Collection          | Purpose                       |
+| ------------------- | ----------------------------- |
+| users               | Tài khoản hệ thống            |
+| elections           | Cuộc bầu cử                   |
+| candidates          | Ứng viên                      |
+| election_voters     | Danh sách voter hợp lệ        |
+| voting_tokens       | Anonymous voting token        |
+| encrypted_ballots   | Phiếu bầu mã hóa              |
+| audit_logs          | Nhật ký hệ thống              |
+| trustees            | Threshold decryption trustees |
+| refresh_tokens      | JWT refresh session           |
+| notifications       | Email/system notification     |
+| election_results    | Final tally                   |
+| zk_proofs(optional) | ZKP verification              |
+
+---
+
+# 4. USERS COLLECTION
+
+## Purpose
+
+Quản lý toàn bộ account:
+
+* company
+* candidate
+* voter
+* admin
+
+---
+
+## Schema
+
+```js
+const userSchema = new mongoose.Schema({
+
+    email: {
+        type: String,
+        required: true,
+        unique: true,
+        lowercase: true,
+        trim: true,
+        index: true
+    },
+
+    passwordHash: {
+        type: String,
+        required: true
+    },
+
+    role: {
+        type: String,
+        enum: [
+            "company",
+            "candidate",
+            "voter",
+            "admin"
+        ],
+        required: true
+    },
+
+    fullName: {
+        type: String,
+        required: true
+    },
+
+    avatar: {
+        type: String,
+        default: null
+    },
+
+    walletAddress: {
+        type: String,
+        unique: true,
+        sparse: true
+    },
+
+    isVerified: {
+        type: Boolean,
+        default: false
+    },
+
+    verificationMethod: {
+        type: String,
+        enum: [
+            "otp",
+            "student_id",
+            "employee_id",
+            "cccd"
+        ],
+        default: null
+    },
+
+    status: {
+        type: String,
+        enum: [
+            "active",
+            "suspended",
+            "deleted"
+        ],
+        default: "active"
+    },
+
+    failedLoginAttempts: {
+        type: Number,
+        default: 0
+    },
+
+    lockUntil: {
+        type: Date,
+        default: null
+    },
+
+    lastLogin: {
+        type: Date,
+        default: null
+    },
+
+    refreshTokenVersion: {
+        type: Number,
+        default: 0
+    },
+
+    createdAt: {
+        type: Date,
+        default: Date.now
+    }
+
+});
+```
+
+---
+
+# 5. ELECTIONS COLLECTION
+
+## Purpose
+
+Lưu metadata cuộc bầu cử.
+
+---
+
+## Schema
+
+```js
+const electionSchema = new mongoose.Schema({
+
+    companyId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+        required: true,
+        index: true
+    },
+
+    title: {
+        type: String,
+        required: true
+    },
+
+    description: {
+        type: String
+    },
+
+    electionType: {
+        type: String,
+        enum: [
+            "public",
+            "private"
+        ],
+        required: true
+    },
+
+    inviteCode: {
+        type: String,
+        unique: true,
+        sparse: true
+    },
+
+    qrJoinToken: {
+        type: String,
+        unique: true,
+        sparse: true
+    },
+
+    status: {
+        type: String,
+        enum: [
+            "draft",
+            "registration_open",
+            "voting_open",
+            "voting_closed",
+            "counting",
+            "published",
+            "archived"
+        ],
+        default: "draft",
+        index: true
+    },
+
+    paillierPublicKey: {
+
+        n: {
+            type: String,
+            required: true
+        },
+
+        g: {
+            type: String,
+            required: true
+        }
+    },
+
+    thresholdConfig: {
+
+        enabled: {
+            type: Boolean,
+            default: false
+        },
+
+        totalTrustees: Number,
+
+        minimumRequired: Number
+    },
+
+    settings: {
+
+        anonymousVoting: {
+            type: Boolean,
+            default: true
+        },
+
+        allowRevote: {
+            type: Boolean,
+            default: false
+        },
+
+        requireOtp: {
+            type: Boolean,
+            default: false
+        },
+
+        maxVoters: {
+            type: Number,
+            default: null
+        }
+    },
+
+    blockchainTxHash: {
+        type: String
+    },
+
+    electionHashOnChain: {
+        type: String
+    },
+
+    merkleRoot: {
+        type: String,
+        default: null
+    },
+
+    resultHash: {
+        type: String,
+        default: null
+    },
+
+    totalVotes: {
+        type: Number,
+        default: 0
+    },
+
+    startTime: {
+        type: Date,
+        required: true
+    },
+
+    endTime: {
+        type: Date,
+        required: true
+    },
+
+    publishedAt: {
+        type: Date,
+        default: null
+    },
+
+    archivedAt: {
+        type: Date,
+        default: null
+    },
+
+    createdAt: {
+        type: Date,
+        default: Date.now
+    }
+
+});
+```
+
+---
+
+# 6. CANDIDATES COLLECTION
+
+## Purpose
+
+Lưu thông tin ứng viên.
+
+---
+
+## Schema
+
+```js
+const candidateSchema = new mongoose.Schema({
+
+    electionId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Election",
+        required: true,
+        index: true
+    },
+
+    userId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+        default: null
+    },
+
+    email: {
+        type: String,
+        required: true
+    },
+
+    name: {
+        type: String,
+        required: true
+    },
+
+    avatar: {
+        type: String,
+        default: null
+    },
+
+    bio: {
+        type: String,
+        default: ""
+    },
+
+    embeddedLinks: [{
+        title: String,
+        url: String,
+        type: {
+            type: String,
+            enum: [
+                "video",
+                "article",
+                "social",
+                "other"
+            ]
+        }
+    }],
+
+    candidateIndexOnChain: {
+        type: Number,
+        required: true
+    },
+
+    cachedVoteCount: {
+        type: Number,
+        default: 0
+    },
+
+    isApproved: {
+        type: Boolean,
+        default: true
+    },
+
+    createdAt: {
+        type: Date,
+        default: Date.now
+    }
+
+});
+```
+
+---
+
+# 7. ELECTION_VOTERS COLLECTION
+
+## Purpose
+
+Liên kết voter với election.
+
+---
+
+## Schema
+
+```js
+const electionVoterSchema = new mongoose.Schema({
+
+    electionId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Election",
+        required: true,
+        index: true
+    },
+
+    voterId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+        required: true,
+        index: true
+    },
+
+    isEligible: {
+        type: Boolean,
+        default: true
+    },
+
+    tokenIssued: {
+        type: Boolean,
+        default: false
+    },
+
+    tokenIssuedAt: {
+        type: Date,
+        default: null
+    },
+
+    hasVoted: {
+        type: Boolean,
+        default: false
+    },
+
+    votedAt: {
+        type: Date,
+        default: null
+    },
+
+    lastSeenAt: {
+        type: Date,
+        default: null
+    },
+
+    joinedVia: {
+        type: String,
+        enum: [
+            "invite_code",
+            "qr",
+            "manual",
+            "public"
+        ],
+        default: "manual"
+    },
+
+    createdAt: {
+        type: Date,
+        default: Date.now
+    }
+
+});
+
+electionVoterSchema.index(
+    {
+        electionId: 1,
+        voterId: 1
+    },
+    {
+        unique: true
+    }
+);
+```
+
+---
+
+# 8. VOTING TOKENS COLLECTION
+
+## Purpose
+
+Anonymous one-time voting credential.
+
+Identity Server:
+
+* biết identity
+
+Voting Server:
+
+* không biết identity
+
+---
+
+## Schema
+
+```js
+const votingTokenSchema = new mongoose.Schema({
+
+    electionId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Election",
+        required: true,
+        index: true
+    },
+
+    tokenHash: {
+        type: String,
+        unique: true,
+        required: true
+    },
+
+    expiresAt: {
+        type: Date,
+        required: true
+    },
+
+    consumed: {
+        type: Boolean,
+        default: false
+    },
+
+    consumedAt: {
+        type: Date,
+        default: null
+    },
+
+    issuedAt: {
+        type: Date,
+        default: Date.now
+    }
+
+});
+```
+
+---
+
+# 9. ENCRYPTED BALLOTS COLLECTION
+
+## Purpose
+
+Lưu encrypted ballots.
+
+KHÔNG lưu plaintext vote.
+
+---
+
+## Schema
+
+```js
+const encryptedBallotSchema = new mongoose.Schema({
+
+    electionId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Election",
+        required: true,
+        index: true
+    },
+
+    encryptedVote: {
+        type: String,
+        required: true
+    },
+
+    ballotHash: {
+        type: String,
+        required: true,
+        unique: true
+    },
+
+    blockchainTxHash: {
+        type: String,
+        required: true
+    },
+
+    nonce: {
+        type: String,
+        required: true
+    },
+
+    signature: {
+        type: String,
+        required: true
+    },
+
+    zkProof: {
+        type: String,
+        default: null
+    },
+
+    nullifierHash: {
+        type: String,
+        unique: true,
+        sparse: true
+    },
+
+    votedAt: {
+        type: Date,
+        default: Date.now
+    }
+
+});
+```
+
+---
+
+# 10. ELECTION RESULTS COLLECTION
+
+## Purpose
+
+Lưu kết quả sau threshold decryption.
+
+---
+
+## Schema
+
+```js
+const electionResultSchema = new mongoose.Schema({
+
+    electionId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Election",
+        required: true,
+        unique: true
+    },
+
+    candidateResults: [{
+
+        candidateId: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Candidate"
+        },
+
+        totalVotes: Number
+    }],
+
+    totalBallots: Number,
+
+    tallyProof: {
+        type: String
+    },
+
+    decryptedAt: {
+        type: Date,
+        default: Date.now
+    },
+
+    publishedBy: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User"
+    }
+
+});
+```
+
+---
+
+# 11. TRUSTEES COLLECTION
+
+## Purpose
+
+Threshold decryption trustees.
+
+---
+
+## Schema
+
+```js
+const trusteeSchema = new mongoose.Schema({
+
+    electionId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Election",
+        required: true
+    },
+
+    trusteeName: String,
+
+    trusteeEmail: String,
+
+    walletAddress: String,
+
+    publicKey: String,
+
+    partialKeyShareHash: String,
+
+    hasSubmittedShare: {
+        type: Boolean,
+        default: false
+    },
+
+    submittedAt: {
+        type: Date,
+        default: null
+    }
+
+});
+```
+
+---
+
+# 12. AUDIT LOGS COLLECTION
+
+## Purpose
+
+Immutable application audit trail.
+
+---
+
+## Schema
+
+```js
+const auditLogSchema = new mongoose.Schema({
+
+    actorId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User"
+    },
+
+    action: {
+        type: String,
+        required: true
+    },
+
+    targetType: {
+        type: String
+    },
+
+    targetId: {
+        type: mongoose.Schema.Types.ObjectId
+    },
+
+    metadata: {
+        type: mongoose.Schema.Types.Mixed
+    },
+
+    ipAddress: {
+        type: String
+    },
+
+    userAgent: {
+        type: String
+    },
+
+    blockchainTxHash: {
+        type: String,
+        default: null
+    },
+
+    createdAt: {
+        type: Date,
+        default: Date.now
+    }
+
+});
+```
+
+---
+
+# 13. REFRESH TOKENS COLLECTION
+
+## Purpose
+
+JWT session management.
+
+---
+
+## Schema
+
+```js
+const refreshTokenSchema = new mongoose.Schema({
+
+    userId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+        required: true
+    },
+
+    tokenHash: {
+        type: String,
+        required: true
+    },
+
+    expiresAt: {
+        type: Date,
+        required: true
+    },
+
+    revoked: {
+        type: Boolean,
+        default: false
+    },
+
+    createdAt: {
+        type: Date,
+        default: Date.now
+    }
+
+});
+```
+
+---
+
+# 14. NOTIFICATIONS COLLECTION
+
+## Purpose
+
+Email + in-app notification.
+
+---
+
+## Schema
+
+```js
+const notificationSchema = new mongoose.Schema({
+
+    userId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User"
+    },
+
+    title: String,
+
+    message: String,
+
+    type: {
+        type: String,
+        enum: [
+            "email",
+            "system",
+            "security",
+            "election"
+        ]
+    },
+
+    read: {
+        type: Boolean,
+        default: false
+    },
+
+    createdAt: {
+        type: Date,
+        default: Date.now
+    }
+
+});
+```
+
+---
+
+# 15. BLOCKCHAIN RESPONSIBILITY
+
+Blockchain chỉ lưu:
+
+* election hash
+* ballot hash
+* result hash
+* audit events
+
+KHÔNG lưu:
+
+* encrypted ballots
+* plaintext vote
+* private keys
+
+---
+
+# 16. SMART CONTRACT STORAGE DESIGN
+
+```solidity
+struct ElectionOnChain {
+
+    uint256 electionId;
+
+    address companyAddress;
+
+    bytes32 electionHash;
+
+    bytes32 resultHash;
+
+    bool isClosed;
+}
+```
+
+---
+
+# 17. FINAL SYSTEM ARCHITECTURE
+
+Frontend
+
+* React
+* NextJS
+* Metamask
+
+Backend
+
+* NodeJS
+* Express
+* JWT auth
+* Redis cache
+
+Cryptography Layer
+
+* Paillier encryption
+* Homomorphic tally
+* Threshold decryption
+* ZKP verification
+
+Storage
+
+* MongoDB
+* Redis
+* IPFS(optional)
+
+Blockchain
+
+* Ethereum
+* Smart contract
+* Event audit trail
+
+---
+
+# 18. SECURITY DESIGN SUMMARY
+
+| Feature           | Mechanism            |
+| ----------------- | -------------------- |
+| Password security | bcrypt               |
+| Vote privacy      | Paillier HE          |
+| One-vote-per-user | token invalidation   |
+| Auditability      | blockchain hashes    |
+| Integrity         | SHA256 + signatures  |
+| Replay protection | nonce                |
+| Anonymous voting  | voting token         |
+| Distributed trust | threshold decryption |
+| Tamper resistance | immutable chain      |
+| Vote validity     | ZKP                  |
+
+---
+
+# 19. RECOMMENDED IMPLEMENTATION ORDER
+
+## Phase 1
+
+* users
+* elections
+* candidates
+* election_voters
+* JWT auth
+* bcrypt
+* public/private election
+
+## Phase 2
+
+* encrypted ballots
+* Paillier encryption
+* homomorphic tally
+
+## Phase 3
+
+* blockchain audit
+* ballot hash on-chain
+* audit log
+
+## Phase 4
+
+* anonymous token
+* threshold decryption
+* wallet signature
+
+## Phase 5
+
+* ZKP
+* Merkle proof
+* blind signature
+* mixnet
+* IPFS

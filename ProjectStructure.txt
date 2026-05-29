@@ -1,0 +1,478 @@
+# Secure E-Voting System — Rebuild Plan (Research-Grade Architecture)
+
+# 1. TECH STACK
+
+Frontend
+
+* NextJS
+* React
+* Semantic UI / Tailwind
+* Ethers.js
+* Axios
+
+Backend
+
+* NodeJS
+* Express / Next API
+* JWT Auth
+* Redis (optional)
+* Nodemailer
+
+Database
+
+* MongoDB + Mongoose
+
+Blockchain
+
+* Solidity
+* Hardhat
+* Ethers.js
+
+Cryptography
+
+* Paillier Homomorphic Encryption
+* Threshold Decryption
+* SHA256
+* Digital Signature
+
+---
+
+# 2. PROJECT STRUCTURE
+
+```bash
+secure-evoting/
+│
+├── frontend/
+│   ├── pages/
+│   ├── components/
+│   ├── services/
+│   ├── hooks/
+│   ├── utils/
+│   └── styles/
+│
+├── backend/
+│   ├── config/
+│   ├── controllers/
+│   ├── routes/
+│   ├── middleware/
+│   ├── models/
+│   ├── services/
+│   ├── crypto/
+│   ├── blockchain/
+│   ├── utils/
+│   └── app.js
+│
+├── blockchain/
+│   ├── contracts/
+│   ├── scripts/
+│   ├── test/
+│   └── hardhat.config.js
+│
+└── docs/
+```
+
+---
+
+# 3. DEVELOPMENT PHASES
+
+# PHASE 1 — AUTHENTICATION SYSTEM
+
+## Goal
+
+Build production-grade auth.
+
+## Features
+
+* register
+* login
+* JWT access token
+* refresh token
+* bcrypt hash
+* role-based auth
+* wallet linking
+* email verification
+* OTP
+
+## Collections
+
+* users
+* refresh_tokens
+
+## APIs
+
+```bash
+POST   /api/auth/register
+POST   /api/auth/login
+POST   /api/auth/refresh
+POST   /api/auth/logout
+POST   /api/auth/verify-email
+POST   /api/auth/connect-wallet
+```
+
+---
+
+# PHASE 2 — ELECTION MANAGEMENT
+
+## Goal
+
+Build election lifecycle system.
+
+## Features
+
+* create election
+* public/private election
+* lifecycle state machine
+* invite code
+* QR join
+* election dashboard
+
+## Collections
+
+* elections
+* audit_logs
+
+## APIs
+
+```bash
+POST   /api/elections
+GET    /api/elections
+GET    /api/elections/:id
+PUT    /api/elections/:id
+PATCH  /api/elections/:id/status
+DELETE /api/elections/:id
+```
+
+---
+
+# PHASE 3 — CANDIDATE MANAGEMENT
+
+## Features
+
+* add candidate
+* candidate profile
+* avatar upload
+* embedded media
+* social links
+* campaign pages
+
+## Collections
+
+* candidates
+
+## APIs
+
+```bash
+POST   /api/candidates
+GET    /api/candidates/election/:id
+PUT    /api/candidates/:id
+DELETE /api/candidates/:id
+```
+
+---
+
+# PHASE 4 — VOTER MANAGEMENT
+
+## Features
+
+* add voter manually
+* excel import
+* invite voter
+* eligibility verification
+* election voter relation
+
+## Collections
+
+* election_voters
+
+## APIs
+
+```bash
+POST   /api/voters/import
+POST   /api/voters/register-election
+GET    /api/voters/election/:id
+DELETE /api/voters/:id
+```
+
+---
+
+# PHASE 5 — PAILLIER ENCRYPTION
+
+## Goal
+
+Build privacy-preserving voting.
+
+## Features
+
+* generate Paillier keys
+* encrypt vote
+* decrypt tally
+* homomorphic addition
+
+## Modules
+
+```bash
+backend/crypto/
+├── paillier.js
+├── keygen.js
+├── tally.js
+└── threshold.js
+```
+
+## Flow
+
+```text
+Vote Selection
+→ Encrypt Vote
+→ Submit Ciphertext
+→ Aggregate Ciphertexts
+→ Decrypt Final Result
+```
+
+---
+
+# PHASE 6 — VOTING SYSTEM
+
+## Goal
+
+Anonymous secure voting.
+
+## Features
+
+* anonymous token
+* one vote per voter
+* encrypted ballot
+* digital signature
+* replay prevention
+
+## Collections
+
+* voting_tokens
+* encrypted_ballots
+
+## APIs
+
+```bash
+POST /api/voting/request-token
+POST /api/voting/cast-ballot
+GET  /api/voting/verify/:ballotHash
+```
+
+---
+
+# PHASE 7 — BLOCKCHAIN AUDIT LAYER
+
+## Goal
+
+Immutable transparency.
+
+## Blockchain stores
+
+* election hash
+* ballot hash
+* result hash
+
+## Smart Contract
+
+```solidity
+createElection()
+submitBallotHash()
+publishResult()
+```
+
+## Events
+
+```solidity
+ElectionCreated
+BallotSubmitted
+ResultPublished
+```
+
+---
+
+# PHASE 8 — THRESHOLD DECRYPTION
+
+## Goal
+
+Distributed trust.
+
+## Features
+
+* trustee system
+* partial decrypt shares
+* minimum threshold
+* final reconstruction
+
+## Collections
+
+* trustees
+
+---
+
+# PHASE 9 — AUDIT SYSTEM
+
+## Features
+
+* public verification
+* ballot receipt
+* audit log
+* blockchain verification
+* tally proof
+
+## Collections
+
+* audit_logs
+* election_results
+
+---
+
+# PHASE 10 — ADVANCED RESEARCH FEATURES
+
+## Features
+
+* Zero-Knowledge Proof
+* Blind Signature
+* Mixnet
+* Merkle Tree
+* IPFS
+* DAO governance
+
+---
+
+# 4. RECOMMENDED ORDER TO CODE
+
+## STEP 1
+
+Setup project
+
+```bash
+npm init
+npm install express mongoose bcryptjs jsonwebtoken dotenv cors
+```
+
+---
+
+## STEP 2
+
+Build:
+
+* MongoDB connection
+* User schema
+* Register API
+* Login API
+* JWT middleware
+
+---
+
+## STEP 3
+
+Build election CRUD.
+
+---
+
+## STEP 4
+
+Build candidate CRUD.
+
+---
+
+## STEP 5
+
+Build election_voters system.
+
+---
+
+## STEP 6
+
+Build Paillier encryption service.
+
+---
+
+## STEP 7
+
+Build encrypted voting.
+
+---
+
+## STEP 8
+
+Build smart contract.
+
+---
+
+## STEP 9
+
+Connect blockchain audit.
+
+---
+
+# 5. CRITICAL SECURITY RULES
+
+NEVER:
+
+* store plaintext passwords
+* store plaintext votes
+* decrypt individual ballots
+* allow duplicate tokens
+* trust frontend validation
+
+ALWAYS:
+
+* bcrypt hash
+* verify JWT
+* validate election status
+* verify token usage
+* hash blockchain data
+* verify signatures
+
+---
+
+# 6. FINAL TARGET ARCHITECTURE
+
+```text
+Frontend
+ ├── React
+ ├── Wallet
+ └── Encryption Client
+
+Backend
+ ├── Auth Service
+ ├── Election Service
+ ├── Voting Service
+ ├── Audit Service
+ └── Candidate Service
+
+Crypto Layer
+ ├── Paillier
+ ├── Threshold Decryption
+ ├── ZKP
+ └── Signatures
+
+Blockchain
+ ├── Smart Contract
+ └── Audit Events
+
+Storage
+ ├── MongoDB
+ ├── Redis
+ └── IPFS
+```
+
+---
+
+# 7. STARTING POINT
+
+START AGAIN FROM:
+
+1. Auth System
+2. Database Schemas
+3. JWT Middleware
+4. Election CRUD
+5. Candidate CRUD
+6. Voter Relation System
+7. Paillier Encryption
+8. Voting Flow
+9. Blockchain Audit
+10. Threshold Decryption
+
+Do NOT code blockchain + encryption first.
+Build stable backend foundation first.

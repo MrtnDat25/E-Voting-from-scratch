@@ -1,0 +1,24 @@
+Auth flow chuẩn
+
+REGISTER
+
+email
+password
+role
+fullname
+↓
+bcrypt hash
+↓
+save user
+
+LOGIN
+
+email
+password
+↓
+bcrypt compare
+↓
+accessToken
+refreshToken
+↓
+save refreshToken DB
