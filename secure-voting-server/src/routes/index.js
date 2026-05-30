@@ -6,10 +6,10 @@ router.use(
   require("../modules/auth/auth.routes")
 );
 
-// router.use(
-//   "/elections",
-//   require("../modules/elections/election.routes")
-// );
+router.use(
+  "/elections",
+  require("../modules/elections/election.routes")
+);
 
 // router.use(
 //   "/candidates",
