@@ -1,37 +1,122 @@
-const router = require("express")
-.Router();
+const authService =
+  require("./auth.service");
 
-const authController =
-  require("./auth.controller");
+exports.register =
+  async (req, res) => {
 
-const authMiddleware =
-  require("../../middleware/auth.middleware");
+    try {
 
-router.post(
-  "/register",
-  authController.register
-);
+      const result =
+        await authService.register(
+          req.body
+        );
 
-router.post(
-  "/login",
-  authController.login
-);
+      return res.status(201)
+      .json(result);
 
-router.post(
-  "/refresh",
-  authController.refresh
-);
+    } catch (err) {
 
-router.post(
-  "/logout",
-  authMiddleware,
-  authController.logout
-);
+      return res.status(500)
+      .json({
+        status: "error",
+        message:
+          err.message,
+      });
+    }
+};
 
-router.get(
-  "/me",
-  authMiddleware,
-  authController.me
-);
+exports.login =
+  async (req, res) => {
 
-module.exports = router;
+    try {
+
+      const result =
+        await authService.login(
+          req.body
+        );
+
+      return res.status(200)
+      .json(result);
+
+    } catch (err) {
+
+      return res.status(500)
+      .json({
+        status: "error",
+        message:
+          err.message,
+      });
+    }
+};
+
+exports.refresh =
+  async (req, res) => {
+
+    try {
+
+      const result =
+        await authService.refresh(
+          req.body.refreshToken
+        );
+
+      return res.status(200)
+      .json(result);
+
+    } catch (err) {
+
+      return res.status(500)
+      .json({
+        status: "error",
+        message:
+          err.message,
+      });
+    }
+};
+
+exports.logout =
+  async (req, res) => {
+
+    try {
+
+      const result =
+        await authService.logout(
+          req.user.userId
+        );
+
+      return res.status(200)
+      .json(result);
+
+    } catch (err) {
+
+      return res.status(500)
+      .json({
+        status: "error",
+        message:
+          err.message,
+      });
+    }
+};
+
+exports.me =
+  async (req, res) => {
+
+    try {
+
+      const result =
+        await authService.me(
+          req.user.userId
+        );
+
+      return res.status(200)
+      .json(result);
+
+    } catch (err) {
+
+      return res.status(500)
+      .json({
+        status: "error",
+        message:
+          err.message,
+      });
+    }
+};
