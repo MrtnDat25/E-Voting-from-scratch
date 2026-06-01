@@ -19,11 +19,25 @@ const controller =
     "./electionVoter.controller"
   );
 
+const importController =
+  require(
+    "./electionVoter.import.controller"
+  );
+
+// add 1 voter
 router.post(
   "/",
   auth,
   roles("company"),
   controller.addVoter
+);
+
+// import excel
+router.post(
+  "/import",
+  auth,
+  roles("company"),
+  importController.importVoters
 );
 
 module.exports = router;
