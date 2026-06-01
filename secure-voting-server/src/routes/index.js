@@ -11,10 +11,17 @@ router.use(
   require("../modules/elections/election.routes")
 );
 
-// router.use(
-//   "/candidates",
-//   require("../modules/candidates/candidate.routes")
-// );
+router.use(
+  "/candidates",
+  require("../modules/candidates/candidate.routes")
+);
+
+router.use(
+  "/election-voters",
+  require(
+    "../modules/election-voters/electionVoter.routes"
+  )
+);
 
 // router.use(
 //   "/voters",
