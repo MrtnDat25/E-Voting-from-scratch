@@ -23,6 +23,12 @@ router.use(
   )
 );
 
+router.use(
+  "/votingTokens",
+  require(
+  "../modules/votingTokens/votingToken.route"
+  )
+);
 // router.use(
 //   "/voters",
 //   require("../modules/voters/voter.routes")
