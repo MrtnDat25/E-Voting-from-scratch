@@ -6,12 +6,12 @@ const router =
 
 const auth =
   require(
-    "../../middleware/auth.middleware"
+    "../../../middleware/auth.middleware"
   );
 
 const roles =
   require(
-    "../../middleware/role.middleware"
+    "../../../middleware/role.middleware"
   );
 
 const controller =
@@ -38,6 +38,19 @@ router.post(
   auth,
   roles("company"),
   importController.importVoters
+);
+
+router.get(
+  "/:electionId",
+  auth,
+  controller.getElectionVoters
+);
+
+router.delete(
+  "/:id",
+  auth,
+  roles("company"),
+  controller.removeVoter
 );
 
 module.exports = router;

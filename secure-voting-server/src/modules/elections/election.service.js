@@ -35,11 +35,12 @@ const createElection = async (user, data) => {
 
   // 3. Build election data trước (IMPORTANT)
   const electionData = {
-    companyId: user.userId,
+    companyId: req.user.id,
     title,
     description,
     electionType,
     inviteCode,
+    status: "draft",
     startTime,
     endTime,
     paillierPublicKey: keyPair.publicKey,

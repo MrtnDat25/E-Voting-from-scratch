@@ -28,5 +28,19 @@ router.post(
 
   controller.createElection
 );
+router.get(
+  "/public",
+  controller.getPublicElections
+);
+router.post(
+  "/join",
+  auth,
+  controller.joinElection
+);
 
+router.get(
+  "/my",
+  auth,
+  controller.myElection
+)
 module.exports = router;

@@ -19,7 +19,7 @@ router.use(
 router.use(
   "/election-voters",
   require(
-    "../modules/election-voters/electionVoter.routes"
+    "../modules/elections/election-voters/electionVoter.routes"
   )
 );
 

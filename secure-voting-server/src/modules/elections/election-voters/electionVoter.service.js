@@ -2,7 +2,7 @@ const bcrypt =
   require("bcryptjs");
 
 const User =
-  require("../users/user.model");
+  require("../../users/user.model");
 
 const ElectionVoter =
   require("./electionVoter.model");
