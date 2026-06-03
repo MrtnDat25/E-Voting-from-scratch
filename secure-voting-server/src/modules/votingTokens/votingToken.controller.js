@@ -33,12 +33,13 @@ exports.requestToken =
             "Election not found",
         });
       }
-
+      console.log("electionId:", electionId);
+      console.log("userId:", req.user.userIdid);
       const voter =
         await ElectionVoter.findOne({
           electionId,
           voterId:
-            req.user.id ,
+            req.user.userId ,
         });
 
       if (!voter) {
