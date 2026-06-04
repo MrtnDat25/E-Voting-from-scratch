@@ -1,4 +1,6 @@
-const mongoose = require("mongoose");
+const mongoose =
+require("mongoose");
+
 const schema =
 new mongoose.Schema({
 
@@ -8,26 +10,27 @@ new mongoose.Schema({
       .Schema
       .Types
       .ObjectId,
-    ref:"Election"
+    ref:"Election",
+    required:true,
+    unique:true
   },
 
-  encryptedVote:{
+  lambda:{
     type:String,
     required:true
   },
 
-  ballotHash:{
+  mu:{
     type:String,
     required:true
-  },
-
-  blockchainTxHash:{
-    type:String
-  },
-
-  votedAt:{
-    type:Date,
-    default:Date.now
   }
 
+},{
+  timestamps:true
 });
+
+module.exports =
+mongoose.model(
+  "ElectionKey",
+  schema
+);

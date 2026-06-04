@@ -1,16 +1,32 @@
 const Election = require("./election.model");
 
-const generateInviteCode = require("../../utils/generateInviteCode");
+const generateInviteCode = require(
+  "../../utils/generateInviteCode"
+);
 
-// FIX IMPORT ĐÚNG KIỂU (quan trọng)
-const { hashElection } = require("../../utils/hashElection");
+const {
+  hashElection,
+} = require(
+  "../../utils/hashElection"
+);
 
-const { generateKeyPair } = require("../../services/crypto/paillier.service");
+const {
+  generateKeyPair,
+} = require(
+  "../../services/paillier/keygen"
+);
+
+const ElectionKey = require(
+  "./electionKey/electionKey.model"
+);
 
 /**
  * CREATE ELECTION
  */
-const createElection = async (user, data) => {
+const createElection = async (
+  user,
+  data
+) => {
   const {
     title,
     description,
@@ -19,58 +35,91 @@ const createElection = async (user, data) => {
     endTime,
   } = data;
 
-  if (!title || !electionType || !startTime || !endTime) {
-    throw new Error("Missing required fields");
+  if (
+    !title ||
+    !electionType ||
+    !startTime ||
+    !endTime
+  ) {
+    throw new Error(
+      "Missing required fields"
+    );
   }
 
-  // 1. Generate Paillier key pair
-  const keyPair = await generateKeyPair();
+  // Generate Paillier key pair
+  const {
+    publicKey,
+    privateKey,
+  } = generateKeyPair();
 
-  // 2. Generate invite code nếu private
+  // Generate invite code nếu private
   let inviteCode = null;
 
-  if (electionType === "private") {
-    inviteCode = generateInviteCode();
+  if (
+    electionType ===
+    "private"
+  ) {
+    inviteCode =
+      generateInviteCode();
   }
 
-  // 3. Build election data trước (IMPORTANT)
+  // Hash election
+  const electionHash =
+    hashElection({
+      title,
+      description,
+      electionType,
+      startTime,
+      endTime,
+      companyId:
+        user.userId,
+    });
+
+  // Build election data
   const electionData = {
-    companyId: req.user.id,
+    companyId:
+      user.userId,
+
     title,
+
     description,
+
     electionType,
+
     inviteCode,
+
     status: "draft",
+
     startTime,
+
     endTime,
-    paillierPublicKey: keyPair.publicKey,
+
+    paillierPublicKey:
+      publicKey,
+
+    electionHashOnChain:
+      electionHash,
   };
 
-  // 4. Hash election BEFORE save (FIX BUG SAVE TRƯỚC)
-  const electionHash = hashElection({
-    title,
-    description,
-    electionType,
-    startTime,
-    endTime,
-    companyId: user.userId,
+  // Save election
+  const election =
+    await Election.create(
+      electionData
+    );
+
+  // Save private key
+  await ElectionKey.create({
+    electionId:
+      election._id,
+
+    lambda:
+      privateKey.lambda,
+
+    mu:
+      privateKey.mu,
   });
 
-  electionData.electionHashOnChain = electionHash;
-
-  // 5. Save 1 lần duy nhất (CLEAN)
-  const election = await Election.create(electionData);
-  const {
-  publicKey,
-  privateKey
-}
-=
-generateKeys();
-
-  return {
-    status: "success",
-    data: election,
-  };
+  return election;
 };
 
 module.exports = {

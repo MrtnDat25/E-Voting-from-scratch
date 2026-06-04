@@ -9,6 +9,19 @@ const VotingToken =
     "../votingTokens/votingToken.model"
   );
 
+const {
+  encodeVote
+} =
+require(
+"../../services/paillier/encode"
+);
+
+const {
+  encrypt
+} =
+require(
+"../../services/paillier/encrypt"
+);
 exports.castVote =
   async (req, res) => {
 
@@ -35,23 +48,31 @@ exports.castVote =
 
       // encrypt vote
       const plaintext =
-      encodeVote(
-        candidateIndex
-      );
+        encodeVote(
+          candidateIndex
+        );
+
       const encryptedVote =
-      encrypt(
-        plaintext,
-        election
-          .paillierPublicKey
-      );
+        encrypt(
+          plaintext,
+          election
+            .paillierPublicKey
+        );
+
+      const crypto =
+      require("crypto");
 
       const ballotHash =
-        crypto
-        .createHash("sha256")
-        .update(
-          encryptedVote
-        )
-        .digest("hex");
+      crypto
+      .createHash(
+        "sha256"
+      )
+      .update(
+        encryptedVote
+      )
+      .digest(
+        "hex"
+      );
 
       await Ballot.create({
         electionId:
@@ -59,10 +80,9 @@ exports.castVote =
 
         encryptedVote,
 
-        ballotHash,
+        ballotHash
 
-        voterTokenId:
-          votingToken._id,
+
       });
 
       votingToken.isUsed =
