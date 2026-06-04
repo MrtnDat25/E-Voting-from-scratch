@@ -34,21 +34,47 @@ exports.requestToken =
         });
       }
       console.log("electionId:", electionId);
-      console.log("userId:", req.user.userIdid);
-      const voter =
-        await ElectionVoter.findOne({
-          electionId,
-          voterId:
-            req.user.userId ,
-        });
+      console.log("userId:", req.user.userId);
+      console.log("query =", {
+  electionId,
+  voterId: req.user.userId,
+});
+const allVoters = await ElectionVoter.find({
+  electionId
+});
 
-      if (!voter) {
-        return res.status(403).json({
-          status: "error",
-          message:
-            "Not eligible",
-        });
-      }
+console.log(
+  JSON.stringify(allVoters, null, 2)
+);
+      let voter =
+  await ElectionVoter.findOne({
+    electionId,
+    voterId: req.user.userId,
+  });
+
+  console.log("Election type:", election.electionType);
+if (!voter) {
+
+  if (
+    election.electionType ===
+    "private"
+  ) {
+
+    return res.status(403).json({
+      status: "error",
+      message:
+        "Not eligible for this election",
+    });
+  }
+
+  voter =
+    await ElectionVoter.create({
+      electionId,
+      voterId:
+        req.user.userId,
+      isEligible: true,
+    });
+}
 
       if (
         voter.hasRequestedToken
@@ -67,7 +93,7 @@ exports.requestToken =
       await VotingToken.create({
         electionId,
         voterId:
-          req.user.id,
+          req.user.userId,
         token,
         expiresAt:
           new Date(
@@ -87,6 +113,8 @@ exports.requestToken =
       });
 
     } catch (err) {
+        console.error("TOKEN ERROR:", err);
+  console.error(err.stack);
 
       return res.status(500).json({
         status: "error",
