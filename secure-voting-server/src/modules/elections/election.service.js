@@ -60,6 +60,12 @@ const createElection = async (user, data) => {
 
   // 5. Save 1 lần duy nhất (CLEAN)
   const election = await Election.create(electionData);
+  const {
+  publicKey,
+  privateKey
+}
+=
+generateKeys();
 
   return {
     status: "success",

@@ -34,9 +34,16 @@ exports.castVote =
       }
 
       // encrypt vote
-
+      const plaintext =
+      encodeVote(
+        candidateIndex
+      );
       const encryptedVote =
-        "TODO";
+      encrypt(
+        plaintext,
+        election
+          .paillierPublicKey
+      );
 
       const ballotHash =
         crypto
