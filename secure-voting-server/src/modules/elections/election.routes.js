@@ -43,4 +43,12 @@ router.get(
   auth,
   controller.myElection
 )
+
+router.patch(
+ "/:id/status",
+ auth,
+ roles("company"),
+ controller.changeStatus
+);
+
 module.exports = router;

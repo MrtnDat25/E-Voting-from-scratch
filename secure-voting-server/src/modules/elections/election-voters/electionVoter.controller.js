@@ -48,20 +48,22 @@
     });
   };
 
- const removeVoter =
-    async (req,res)=>{
+  const removeVoter = async (req, res) => {
+    try {
+      await service.removeVoter(req.params.id);
 
-  const { id } =
-    req.params;
+      return res.json({
+        status: "success",
+        message: "Voter removed"
+      });
 
-  await ElectionVoter
-    .findByIdAndDelete(id);
-
-  return res.json({
-    status:"success",
-    message:"Voter removed"
-  });
-};
+    } catch (err) {
+      return res.status(400).json({
+        status: "error",
+        message: err.message
+      });
+    }
+  };
 module.exports = {
   addVoter,
   getElectionVoters,

@@ -1,6 +1,10 @@
 const service =
   require("./candidate.service");
 
+const Election = 
+  require("../elections/election.model")
+
+
 const createCandidate =
   async (
     req,

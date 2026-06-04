@@ -1,85 +1,74 @@
-const Candidate =
-  require("./candidate.model");
+const Candidate = require("./candidate.model");
+const User = require("../users/user.model");
+const Election = require("../elections/election.model");
+const bcrypt = require("bcryptjs");
 
-const User =
-  require(
-    "../users/user.model"
+const createCandidate = async (data) => {
+  const {
+    electionId,
+    email,
+    name,
+  } = data;
+
+  const election = await Election.findById(
+    electionId
   );
 
-const bcrypt =
-  require("bcryptjs");
+  if (!election) {
+    throw new Error("Election not found");
+  }
 
-const createCandidate =
-  async (data) => {
+  if (
+    election.status !== "draft" &&
+    election.status !== "registration_open"
+  ) {
+    throw new Error(
+      "Cannot add candidate. Election is no longer editable."
+    );
+  }
 
-    const {
-      electionId,
+  let user = await User.findOne({
+    email,
+  });
+
+  if (!user) {
+    const passwordHash = await bcrypt.hash(
       email,
-      name,
-    } = data;
+      10
+    );
 
-    let user =
-      await User.findOne({
-        email,
-      });
+    user = await User.create({
+      email,
+      fullName: name,
+      role: "candidate",
+      passwordHash,
+    });
+  }
 
-    if (!user) {
-
-      const passwordHash =
-        await bcrypt.hash(
-          email,
-          10
-        );
-
-      user =
-        await User.create({
-          email,
-
-          fullName: name,
-
-          role: "candidate",
-
-          passwordHash,
-        });
-    }
-
-    const count =
-      await Candidate.countDocuments({
-        electionId,
-      });
-
-    const candidate =
-      await Candidate.create({
-        electionId,
-
-        userId: user._id,
-
-        email,
-
-        name,
-
-        candidateIndexOnChain:
-          count,
-      });
-
-    return candidate;
-  };
-
-
-const getCandidates =
-  async (electionId) => {
-
-    return Candidate.find({
+  const count =
+    await Candidate.countDocuments({
       electionId,
     });
-  };
+
+  const candidate =
+    await Candidate.create({
+      electionId,
+      userId: user._id,
+      email,
+      name,
+      candidateIndexOnChain: count,
+    });
+
+  return candidate;
+};
+
+const getCandidates = async (electionId) => {
+  return Candidate.find({
+    electionId,
+  });
+};
 
 module.exports = {
   createCandidate,
   getCandidates,
-};
-
-
-module.exports = {
-  createCandidate,
 };

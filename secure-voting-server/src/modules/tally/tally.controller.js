@@ -20,6 +20,24 @@ exports.tally = async (req, res) => {
         message: "Election not found",
       });
     }
+    
+    
+    if(
+    election.status !==
+    "voting_closed"
+    ){
+    return res
+    .status(400)
+    .json({
+
+      status:"error",
+
+      message:
+      "Election not ready"
+
+    });
+    }
+
 
     const ballots = await Ballot.find({
       electionId: election._id,

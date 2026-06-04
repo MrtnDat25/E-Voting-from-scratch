@@ -7,6 +7,10 @@ const User =
 const ElectionVoter =
   require("./electionVoter.model");
 
+const Election = 
+  require("../../elections/election.model")
+
+
 const addVoter =
   async (
     electionId,
@@ -14,6 +18,25 @@ const addVoter =
     fullName
   ) => {
 
+    const election =
+      await Election.findById(
+        electionId
+      );
+
+    if (!election) {
+      throw new Error(
+        "Election not found"
+      );
+    }
+
+    if (
+      election.status !== "draft" &&
+      election.status !== "registration_open"
+    ) {
+      throw new Error(
+        "Cannot modify voters"
+      );
+    }
     let voter =
       await User.findOne({
         email,
@@ -57,6 +80,37 @@ const addVoter =
     });
   };
 
+  const removeVoter = async (id) => {
+
+    const voter =
+      await ElectionVoter.findById(id);
+
+    if (!voter) {
+      throw new Error(
+        "Voter not found"
+      );
+    }
+
+    const election =
+      await Election.findById(
+        voter.electionId
+      );
+
+    if (
+      election.status !== "draft" &&
+      election.status !== "registration_open"
+    ) {
+      throw new Error(
+        "Cannot modify voters"
+      );
+    }
+
+    await ElectionVoter.findByIdAndDelete(
+      id
+    );
+  };
+
 module.exports = {
   addVoter,
+  removeVoter,
 };
