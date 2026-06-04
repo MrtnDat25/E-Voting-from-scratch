@@ -29,6 +29,11 @@ router.use(
   "../modules/votingTokens/votingToken.route"
   )
 );
+
+router.use(
+  "/ballots",
+  require("../modules/ballots/ballot.routes")
+);
 // router.use(
 //   "/voters",
 //   require("../modules/voters/voter.routes")
