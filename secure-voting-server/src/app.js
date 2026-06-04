@@ -34,8 +34,11 @@ app.use(express.urlencoded({
   extended: true,
 }));
 
+
 app.use(cookieParser());
 
 app.use("/api", routes);
+app.use("/api/results", require("./modules/results/result.route"));
+app.use("/api/tally", require("./modules/tally/tally.route"));
 
 module.exports = app;

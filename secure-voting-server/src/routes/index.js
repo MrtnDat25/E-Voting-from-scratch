@@ -34,6 +34,17 @@ router.use(
   "/ballots",
   require("../modules/ballots/ballot.routes")
 );
+
+const resultRoutes =
+require(
+ "../modules/results/result.route"
+);
+
+router.use( 
+ "/results",
+ resultRoutes
+);
+
 // router.use(
 //   "/voters",
 //   require("../modules/voters/voter.routes")
