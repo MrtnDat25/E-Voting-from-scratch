@@ -1,9 +1,9 @@
 const {
   NUM_BITS
 } =
-require("./config");
+import("./config");
 
-function encodeVote(
+export function encodeVote(
   candidateIndex
 ) {
 
@@ -17,6 +17,6 @@ function encodeVote(
 
 }
 
-module.exports = {
-  encodeVote
-};
+// export default {
+//   encodeVote
+// };

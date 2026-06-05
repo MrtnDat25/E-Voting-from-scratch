@@ -18,7 +18,7 @@ Hardhat 3 supports two distinct test layers:
 
 **Solidity tests** (`.t.sol` files in `contracts/`, or any `.sol` file in `test/`) are the default choice for unit tests on individual contracts. They run directly in the EVM, compile-check against the real ABI, and have access to cheatcodes for EVM state manipulation. Any public function whose name starts with `test` is executed as a test case.
 
-**TypeScript tests** (`.ts` files in `test/`) are the right choice when a test requires off-chain orchestration: multi-contract interactions, fixture reuse across a large suite, assertions about gas or ETH balances from the outside, or integration scenarios driven by external state.
+**TypeScript tests** (`.ts` files in `test/`) are the right choice when a test imports off-chain orchestration: multi-contract interactions, fixture reuse across a large suite, assertions about gas or ETH balances from the outside, or integration scenarios driven by external state.
 
 Reach for TypeScript only when Solidity isn't enough. Solidity tests cover all contract logic; TypeScript tests cover the end-to-end flow as a user or script would experience it.
 
@@ -130,7 +130,7 @@ async function deployCounter() {
 }
 
 const { counter } = await networkHelpers.loadFixture(deployCounter);
-// loadFixture requires a named function for caching to work (not an
+// loadFixture imports a named function for caching to work (not an
 // arrow/anonymous function)
 
 // Snapshots (manual)

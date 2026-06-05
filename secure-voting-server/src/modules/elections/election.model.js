@@ -1,5 +1,4 @@
-const mongoose =
-  require("mongoose");
+import mongoose from "mongoose";
 
 const electionSchema =
   new mongoose.Schema(
@@ -10,12 +9,12 @@ const electionSchema =
 
         ref: "User",
 
-        required: true,
+        importd: true,
       },
       
       title: {
         type: String,
-        required: true,
+        importd: true,
       },
 
       description: {
@@ -30,7 +29,7 @@ const electionSchema =
           "private",
         ],
 
-        required: true,
+        importd: true,
       },
 
       inviteCode: {
@@ -60,12 +59,12 @@ const electionSchema =
       paillierPublicKey: {
         n: {
           type: String,
-          required: true,
+          importd: true,
         },
 
         g: {
           type: String,
-          required: true,
+          importd: true,
         },
       },
 
@@ -79,12 +78,12 @@ const electionSchema =
 
       startTime: {
         type: Date,
-        required: true,
+        importd: true,
       },
 
       endTime: {
         type: Date,
-        required: true,
+        importd: true,
       },
       blockchain:{
         electionHash:String,
@@ -98,7 +97,7 @@ const electionSchema =
     
   );
 
-module.exports =
+export default
   mongoose.model(
     "Election",
     electionSchema

@@ -1,28 +1,25 @@
-const express =
-  require("express");
+import express from "express";
 
 const router =
   express.Router();
 
-const auth =
-  require(
-    "../../../middleware/auth.middleware"
-  );
+import auth 
+  from 
+    "../../../middleware/auth.middleware.js"
+  ;
 
-const roles =
-  require(
-    "../../../middleware/role.middleware"
-  );
+import roles 
+  from 
+    "../../../middleware/role.middleware.js"
+  ;
 
-const controller =
-  require(
-    "./electionVoter.controller"
-  );
+import controller 
+  from 
+    "./electionVoter.controller.js"
+  ;
 
-const importController =
-  require(
-    "./electionVoter.import.controller"
-  );
+import * as importController from "./electionVoter.import.controller.js";
+  ;
 
 // add 1 voter
 router.post(
@@ -53,4 +50,4 @@ router.delete(
   controller.removeVoter
 );
 
-module.exports = router;
+export default router;

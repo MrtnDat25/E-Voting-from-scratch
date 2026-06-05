@@ -1,9 +1,9 @@
-const express = require("express");
+import express  from "express";
 
 const router = express.Router();
 
-const controller = require("./result.controller");
+import * as controller  from "./result.controller.js";
 
 router.get("/:electionId", controller.getResult);
 
-module.exports = router;
+export default router;

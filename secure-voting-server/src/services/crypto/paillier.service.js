@@ -14,7 +14,7 @@ const generateKeyPair =
     };
   };
 
-module.exports = {
+export default {
   generateKeyPair,
 };
 

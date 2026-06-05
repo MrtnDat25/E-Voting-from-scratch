@@ -1,23 +1,22 @@
-const express =
-  require("express");
+import express from "express";
 
 const router =
   express.Router();
 
-const auth =
-  require(
-    "../../middleware/auth.middleware"
-  );
+import auth 
+  from 
+    "../../middleware/auth.middleware.js"
+  ;
 
-const roles =
-  require(
-    "../../middleware/role.middleware"
-  );
+import roles 
+  from 
+    "../../middleware/role.middleware.js"
+  ;
 
-const controller =
-  require(
-    "./election.controller"
-  );
+import controller 
+  from 
+    "./election.controller.js"
+  ;
 
 router.post(
   "/",
@@ -51,4 +50,4 @@ router.patch(
  controller.changeStatus
 );
 
-module.exports = router;
+export default router;

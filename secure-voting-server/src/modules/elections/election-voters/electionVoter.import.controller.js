@@ -1,13 +1,13 @@
-const { formidable } = require("formidable");
-const XLSX = require("xlsx");
-const bcrypt = require("bcryptjs");
-const fs = require("fs");
+import { formidable }  from "formidable";
+import XLSX  from "xlsx";
+import bcrypt  from "bcryptjs";
+import fs  from "fs";
 
-const User = require("../../users/user.model");
-const Election = require("../election.model");
-const ElectionVoter = require("./electionVoter.model");
+import User  from "../../users/user.model.js";
+import Election  from "../election.model.js";
+import ElectionVoter  from "./electionVoter.model.js";
 
-exports.importVoters = async (req, res) => {
+export const importVoters = async (req, res) => {
 
   const form = formidable({
     multiples: false,
@@ -35,8 +35,8 @@ exports.importVoters = async (req, res) => {
           Array.isArray(fields.electionId)
             ? fields.electionId[0]
             : fields.electionId;
-console.log("FIELDS:", fields);
-console.log("FIELD KEYS:", Object.keys(fields));
+          console.log("FIELDS:", fields);
+          console.log("FIELD KEYS:", Object.keys(fields));
         const file =
           files.file?.[0] ||
           files.file;
@@ -44,14 +44,14 @@ console.log("FIELD KEYS:", Object.keys(fields));
         if (!electionId) {
           return res.status(400).json({
             status: "error",
-            message: "ElectionId is required",
+            message: "ElectionId is importd",
           });
         }
 
         if (!file) {
           return res.status(400).json({
             status: "error",
-            message: "Excel file is required",
+            message: "Excel file is importd",
           });
         }
 

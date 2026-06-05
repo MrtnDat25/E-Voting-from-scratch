@@ -1,64 +1,31 @@
-const router = require("express")
-.Router();
+import express from "express";
+const router = express.Router();
 
-router.use(
-  "/auth",
-  require("../modules/auth/auth.routes")
-);
+import * as AuthRoutes from "../modules/auth/auth.routes.js";
+import electionRoutes from "../modules/elections/election.routes.js";
+import candidateRoutes from "../modules/candidates/candidate.routes.js";
+import voterRoutes from "../modules/elections/election-voters/electionVoter.routes.js";
+import tokenRoutes from "../modules/votingTokens/votingToken.route.js";
+import ballotRoutes from "../modules/ballots/ballot.routes.js";
+import resultRoutes from "../modules/results/result.route.js";
 
-router.use(
-  "/elections",
-  require("../modules/elections/election.routes")
-);
+router.use("/auth", AuthRoutes);
+router.use("/elections", electionRoutes);
+router.use("/candidates", candidateRoutes);
+router.use("/election-voters", voterRoutes);
+router.use("/votingTokens", tokenRoutes);
+router.use("/ballots", ballotRoutes);
+router.use("/results", resultRoutes);
+router.use("/audit", auditRoutes);
 
-router.use(
-  "/candidates",
-  require("../modules/candidates/candidate.routes")
-);
+export default router;
 
-router.use(
-  "/election-voters",
-  require(
-    "../modules/elections/election-voters/electionVoter.routes"
-  )
-);
-
-router.use(
-  "/votingTokens",
-  require(
-  "../modules/votingTokens/votingToken.route"
-  )
-);
-
-router.use(
-  "/ballots",
-  require("../modules/ballots/ballot.routes")
-);
-
-const resultRoutes =
-require(
- "../modules/results/result.route"
-);
-
-router.use( 
- "/results",
- resultRoutes
-);
-
-router.use(
- "/audit",
- require(
- "../modules/audit/audit.route"
- )
-);
 // router.use(
 //   "/voters",
-//   require("../modules/voters/voter.routes")
+//   import("../modules/voters/voter.routes")
 // );
 
 // router.use(
 //   "/ballots",
-//   require("../modules/ballots/ballot.routes")
+//   import("../modules/ballots/ballot.routes")
 // );
-
-module.exports = router;

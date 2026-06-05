@@ -8,12 +8,12 @@ const encryptedBallotSchema =
 
     encryptedVote: {
       type: String,
-      required: true
+      importd: true
     },
 
     ballotHash: {
       type: String,
-      required: true
+      importd: true
     },
 
     blockchainTxHash: String,

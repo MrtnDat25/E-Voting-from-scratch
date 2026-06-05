@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+import mongoose  from "mongoose";
 
 const embeddedLinkSchema =
   new mongoose.Schema({
@@ -25,7 +25,7 @@ const candidateSchema =
 
         ref: "Election",
 
-        required: true,
+        importd: true,
       },
 
       userId: {
@@ -39,12 +39,12 @@ const candidateSchema =
 
       email: {
         type: String,
-        required: true,
+        importd: true,
       },
 
       name: {
         type: String,
-        required: true,
+        importd: true,
       },
 
       avatar: String,
@@ -57,7 +57,7 @@ const candidateSchema =
 
       candidateIndexOnChain: {
         type: Number,
-        required: true,
+        importd: true,
       },
 
       cachedVoteCount: {
@@ -70,7 +70,7 @@ const candidateSchema =
     }
   );
 
-module.exports =
+export default
   mongoose.model(
     "Candidate",
     candidateSchema

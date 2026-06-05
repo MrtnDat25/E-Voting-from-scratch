@@ -1,50 +1,8 @@
-const {
-  generateKeyPair
-} =
-require(
-"./src/services/paillier/keygen"
-);
+import dotenv from "dotenv";
 
-const {
-  encrypt
-} =
-require(
-"./src/services/paillier/encrypt"
-);
+dotenv.config();
 
-const {
-  decrypt
-} =
-require(
-"./src/services/paillier/decrypt"
-);
+import { contract } from "./src/blockchain/contract.js";
 
-const {
-  publicKey,
-  privateKey
-} =
-generateKeyPair();
-
-const message = 5n;
-
-const ciphertext =
-  encrypt(
-    message,
-    publicKey
-  );
-
-console.log(
-  "Encrypted:",
-  ciphertext
-);
-
-const decrypted =
-  decrypt(
-    ciphertext,
-    privateKey
-  );
-
-console.log(
-  "Decrypted:",
-  decrypted.toString()
-);
+console.log(await contract.getAddress());
+console.log(process.env.CONTRACT_ADDRESS);

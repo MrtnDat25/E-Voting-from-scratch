@@ -1,14 +1,14 @@
-const service =
-  require("./candidate.service");
+import service 
+  from "./candidate.service.js";
 
-const Election =
-  require("../elections/election.model");
+import Election 
+  from "../elections/election.model.js";
 
-const { writeAudit } =
-  require("../audit/audit.service");
+import { writeAudit } 
+  from "../audit/audit.service.js";
 
-const Actions =
-  require("../../constants/auditActions");
+import Actions 
+  from "../../constants/auditActions.js";
 
 const createCandidate =
   async (req, res) => {
@@ -84,7 +84,7 @@ const getCandidates =
     }
   };
 
-module.exports = {
+export default {
   createCandidate,
   getCandidates,
 };

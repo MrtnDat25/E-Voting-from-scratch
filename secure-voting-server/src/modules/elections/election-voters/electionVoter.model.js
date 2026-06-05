@@ -1,5 +1,4 @@
-const mongoose =
-  require("mongoose");
+import mongoose   from "mongoose";
 
 const electionVoterSchema =
   new mongoose.Schema(
@@ -10,7 +9,7 @@ const electionVoterSchema =
 
         ref: "Election",
 
-        required: true,
+        importd: true,
       },
 
       voterId: {
@@ -19,7 +18,7 @@ const electionVoterSchema =
 
         ref: "User",
 
-        required: true,
+        importd: true,
       },
 
       isEligible: {
@@ -62,7 +61,7 @@ electionVoterSchema.index(
   }
 );
 
-module.exports =
+export default
   mongoose.model(
     "ElectionVoter",
     electionVoterSchema

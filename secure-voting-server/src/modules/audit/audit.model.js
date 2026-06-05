@@ -1,5 +1,4 @@
-const mongoose =
-require("mongoose");
+import mongoose  from "mongoose";
 
 const auditSchema =
 new mongoose.Schema({
@@ -22,7 +21,7 @@ new mongoose.Schema({
 
   action:{
     type:String,
-    required:true
+    importd:true
   },
 
   metadata:{
@@ -37,7 +36,7 @@ new mongoose.Schema({
 
 });
 
-module.exports =
+export default
 mongoose.model(
   "AuditLog",
   auditSchema

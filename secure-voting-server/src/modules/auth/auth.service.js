@@ -1,24 +1,24 @@
-const User = require("../users/user.model");
-const jwt = require("jsonwebtoken");
+import User  from  "../users/user.model.js";
+import jwt   from  "jsonwebtoken";
 
-const {
+import {
   hashPassword,
   comparePassword,
-} = require("../../utils/hash");
+} from "../../utils/hash.js";
 
-const {
+import {
   generateAccessToken,
   generateRefreshToken,
-} = require("../../utils/jwt");
+}  from"../../utils/jwt.js";
 
 /**
  * REGISTER
  */
-const register = async (data = {}) => {
+export const register = async (data = {}) => {
   const { email, password, role, fullName } = data;
 
   if (!email || !password) {
-    throw new Error("Email and password are required");
+    throw new Error("Email and password are importd");
   }
 
   const existingUser = await User.findOne({
@@ -51,11 +51,11 @@ const register = async (data = {}) => {
 /**
  * LOGIN
  */
-const login = async (data = {}) => {
+export const login = async (data = {}) => {
   const { email, password } = data;
 
   if (!email || !password) {
-    throw new Error("Email and password are required");
+    throw new Error("Email and password are importd");
   }
 
   const user = await User.findOne({
@@ -172,7 +172,7 @@ const me = async (userId) => {
   };
 };
 
-module.exports = {
+export default {
   register,
   login,
   refresh,

@@ -1,16 +1,16 @@
-const Ballot = require("../ballots/ballot.model");
-const Election = require("../elections/election.model");
-const ElectionKey = require("../elections/electionKey/electionKey.model");
-const Candidate = require("../candidates/candidate.model");
-const ElectionResult = require("../results/result.model");
+import Ballot from "../ballots/ballot.model.js";
+import Election from "../elections/election.model.js";
+import ElectionKey from "../elections/electionKey/electionKey.model.js";
+import Candidate from "../candidates/candidate.model.js";
+import ElectionResult from "../results/result.model.js";
 
-const { aggregateVotes } = require("../../services/paillier/aggregate");
-const { decrypt } = require("../../services/paillier/decrypt");
-const { decodeResult } = require("../../services/paillier/decode");
+import { aggregateVotes } from "../../services/paillier/aggregate.js";
+import { decrypt } from "../../services/paillier/decrypt.js";
+import { decodeResult } from "../../services/paillier/decode.js";
 
-const crypto = require("crypto");
-const {writeAudit} =  require("../audit/audit.service");
-const Actions = require("../../constants/auditActions");
+import crypto from "crypto.js";
+import {writeAudit} from "../audit/audit.service.js";
+import Actions from "../../constants/auditActions.js";
 exports.tally = async (req, res) => {
   try {
     const election = await Election.findById(req.params.id);

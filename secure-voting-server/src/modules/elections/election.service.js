@@ -1,24 +1,24 @@
-const Election = require("./election.model");
+import  Election from "./election.model.js";
 
-const generateInviteCode = require(
-  "../../utils/generateInviteCode"
-);
+import generateInviteCode  from 
+  "../../utils/generateInviteCode.js"
+;
 
-const {
+import {
   hashElection,
-} = require(
-  "../../utils/hashElection"
-);
+}  from 
+  "../../utils/hashElection.js"
+;
 
-const {
+import {
   generateKeyPair,
-} = require(
-  "../../services/paillier/keygen"
-);
+}  from 
+  "../../services/paillier/keygen.js"
+;
 
-const ElectionKey = require(
-  "./electionKey/electionKey.model"
-);
+import ElectionKey  from 
+  "./electionKey/electionKey.model.js"
+;
 
 /**
  * CREATE ELECTION
@@ -42,7 +42,7 @@ const createElection = async (
     !endTime
   ) {
     throw new Error(
-      "Missing required fields"
+      "Missing importd fields"
     );
   }
 
@@ -123,7 +123,7 @@ const createElection = async (
 };
 
 
-module.exports = {
+export default {
   createElection,
 
 };

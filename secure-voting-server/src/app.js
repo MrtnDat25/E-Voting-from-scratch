@@ -1,22 +1,22 @@
-const express = require("express");
+import express  from"express";
 
-const cors = require("cors");
+import cors  from"cors";
 
-const helmet = require("helmet");
+import helmet  from"helmet";
 
-const morgan = require("morgan");
+import morgan  from"morgan";
 
-const cookieParser = require(
+import cookieParser  from
   "cookie-parser"
-);
+;
 
-const connectDB = require(
-  "./config/db"
-);
+import connectDB  from
+  "./config/db.js"
+;
 
-const routes = require(
-  "./routes"
-);
+import routes  from
+  "./routes/index.js"
+;
 
 const app = express();
 
@@ -38,7 +38,7 @@ app.use(express.urlencoded({
 app.use(cookieParser());
 
 app.use("/api", routes);
-app.use("/api/results", require("./modules/results/result.route"));
-app.use("/api/tally", require("./modules/tally/tally.route"));
+app.use("/api/results", import("./modules/results/result.route"));
+app.use("/api/tally", import("./modules/tally/tally.route"));
 
-module.exports = app;
+export default app;

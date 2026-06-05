@@ -38,8 +38,16 @@
 // });
 import type { HardhatUserConfig } from "hardhat/config";
 
+import hardhatEthers from "@nomicfoundation/hardhat-ethers";
+import hardhatIgnition from "@nomicfoundation/hardhat-ignition";
+
 const config: HardhatUserConfig = {
-  solidity: "0.8.20",
+  plugins: [
+    hardhatEthers,
+    hardhatIgnition,
+  ],
+
+  solidity: "0.8.28",
 
   networks: {
     localhost: {
@@ -49,4 +57,4 @@ const config: HardhatUserConfig = {
   },
 };
 
-module.exports = config;
+export default config;

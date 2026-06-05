@@ -1,4 +1,4 @@
-function aggregateVotes(
+export function aggregateVotes(
   encryptedVotes,
   n
 ) {
@@ -25,6 +25,6 @@ function aggregateVotes(
   return total.toString();
 }
 
-module.exports = {
-  aggregateVotes
-};
+// export default {
+//   aggregateVotes
+// };

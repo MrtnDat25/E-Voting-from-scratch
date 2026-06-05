@@ -1,21 +1,17 @@
-const express =
-  require("express");
+import express from "express";
 
 const router =
   express.Router();
 
-const auth =
-  require(
-    "../../middleware/auth.middleware"
-  );
+import auth from 
+    "../../middleware/auth.middleware.js"
+  ;
 
-const roles =
-  require(
-    "../../middleware/role.middleware"
-  );
+import roles from 
+    "../../middleware/role.middleware.js"
+  ;
 
-const controller =
-  require("./votingToken.controller")
+import * as controller from "./votingToken.controller.js";
 
 router.post(
   "/request",
@@ -24,4 +20,4 @@ router.post(
   controller.requestToken
 );
 
-module.exports = router;
+export default router;

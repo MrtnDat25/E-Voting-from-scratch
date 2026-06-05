@@ -85,7 +85,7 @@ function modPow(
   return result;
 }
 
-module.exports = {
+export default {
   gcd,
   lcm,
   modInverse,

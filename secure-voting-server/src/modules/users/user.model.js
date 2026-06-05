@@ -1,13 +1,13 @@
-const mongoose = require(
+import mongoose from
   "mongoose"
-);
+;
 
 const userSchema =
   new mongoose.Schema({
 
     email: {
       type: String,
-      required: true,
+      importd: true,
       unique: true,
       lowercase: true,
       trim: true,
@@ -15,7 +15,7 @@ const userSchema =
 
     passwordHash: {
       type: String,
-      required: true,
+      importd: true,
     },
 
     role: {
@@ -25,12 +25,12 @@ const userSchema =
         "candidate",
         "voter",
       ],
-      required: true,
+      importd: true,
     },
 
     fullName: {
       type: String,
-      required: true,
+      importd: true,
     },
 
     walletAddress: {
@@ -57,7 +57,7 @@ const userSchema =
     timestamps: true,
   });
 
-module.exports =
+export default
   mongoose.model(
     "User",
     userSchema

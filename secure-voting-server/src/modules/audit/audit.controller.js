@@ -1,28 +1,49 @@
-const AuditLog =
-require("./audit.model");
+import AuditLog  from"./audit.model.js"
 
 exports.getLogs =
 async (req,res)=>{
 
-  const logs =
-    await AuditLog
-    .find({
+  try{
 
-      electionId:
-        req.params
-          .electionId
+    const logs =
+      await AuditLog
+      .find({
 
-    })
-    .sort({
-      createdAt:-1
+        electionId:
+          req.params.electionId
+
+      })
+      .populate(
+        "actorId",
+        "fullName email role"
+      )
+      .sort({
+        createdAt:-1
+      });
+
+    return res.json({
+
+      status:"success",
+
+      count:logs.length,
+
+      data:logs
+
     });
 
-  return res.json({
+  }
+  catch(err){
 
-    status:"success",
+    return res.status(500)
+    .json({
 
-    data:logs
+      status:"error",
 
-  });
+      message:
+        err.message
+
+    });
+
+  }
 
 };

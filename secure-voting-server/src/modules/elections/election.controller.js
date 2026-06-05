@@ -1,31 +1,28 @@
-const electionService =
-  require("./election.service");
+import electionService 
+  from "./election.service.js";
 
-const Election =
-  require("./election.model");
+import Election 
+  from "./election.model.js";
 
-const ElectionVoter =
-  require("./election-voters/electionVoter.model");
+import ElectionVoter 
+  from "./election-voters/electionVoter.model.js";
 
-const { nanoid } =
-  require("nanoid");
+import { nanoid } 
+  from "nanoid";
 
-const { ELECTION_STATUS } =
-  require("./election.constants");
+import ELECTION_STATUS from "./election.constants.js";
 
   console.log(ELECTION_STATUS); 
 
-const crypto = require("crypto");
-const { getContractWithSigner } = require("../../blockchain/contract");
+import crypto  from "crypto";
+import { getContractWithSigner }  from "../../blockchain/contract.js";
 
 
-
-const {
+import {
   writeAudit,
-} = require("../audit/audit.service");
-
-const Actions =
-  require("../../constants/auditActions");
+}  from "../audit/audit.service.js";
+import Actions 
+  from "../../constants/auditActions.js";
 /**
  * CREATE ELECTION
  */
@@ -288,7 +285,7 @@ const changeStatus =
     }
   };
 
-module.exports = {
+export default {
   createElection,
   getPublicElections,
   joinElection,

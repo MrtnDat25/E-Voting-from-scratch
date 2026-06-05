@@ -1,23 +1,12 @@
-const express =
-require("express");
+import express from "express";
 
-const router =
-express.Router();
+const router = express.Router();
 
-const auth =
-require(
-"../../middleware/auth.middleware"
-);
+import auth from "../../middleware/auth.middleware.js";
 
-const roles =
-require(
-"../../middleware/role.middleware"
-);
+import roles from "../../middleware/role.middleware.js";
 
-const controller =
-require(
-"./audit.controller"
-);
+import * as  controller from "./audit.controller.js";
 
 router.get(
  "/:electionId",
@@ -26,5 +15,4 @@ router.get(
  controller.getLogs
 );
 
-module.exports =
-router;
+// export default router;

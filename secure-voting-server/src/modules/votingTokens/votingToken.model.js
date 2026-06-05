@@ -1,23 +1,21 @@
 
-const mongoose =
-  require("mongoose");
+import mongoose from "mongoose";
 
 const votingTokenSchema = new mongoose.Schema({
   electionId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "Election",
-    required: true
+    ref: "Election",importd: true
   },
 
   voterId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
-    required: true
+    importd: true
   },
 
   token: {
     type: String,
-    required: true,
+    importd: true,
     unique: true
   },
 
@@ -29,7 +27,7 @@ const votingTokenSchema = new mongoose.Schema({
 
   expiresAt: {
     type: Date,
-    required: true,
+    importd: true,
     // index: true
   }
 }, {
@@ -42,7 +40,7 @@ votingTokenSchema.index({ electionId: 1, voterId: 1 }, { unique: true });
 // auto delete expired
 votingTokenSchema.index({ expiresAt: 1 }, { expireAfterSeconds: 0 });
 
-module.exports =
+export default
   mongoose.model(
     "VotingToken",
     votingTokenSchema

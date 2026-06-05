@@ -1,7 +1,6 @@
-const AuditLog =
-require("./audit.model");
+import AuditLog from"./audit.model.js";
 
-exports.writeAudit =
+export const writeAudit =
 async ({
   actorId,
   actorRole,

@@ -1,8 +1,8 @@
 const {
   modPow
-} = require("./math");
+} = import("./math");
 
-function decrypt(
+export function decrypt(
   ciphertext,
   privateKey
 ) {
@@ -43,6 +43,6 @@ function decrypt(
   return plaintext;
 }
 
-module.exports = {
-  decrypt
-};
+// export default {
+//   decrypt
+// };

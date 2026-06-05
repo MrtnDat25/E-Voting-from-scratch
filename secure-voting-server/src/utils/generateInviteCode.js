@@ -1,7 +1,6 @@
-const crypto =
-  require("crypto");
+import crypto   from "crypto";
 
-module.exports = () => {
+export default () => {
 
   return crypto
     .randomBytes(4)

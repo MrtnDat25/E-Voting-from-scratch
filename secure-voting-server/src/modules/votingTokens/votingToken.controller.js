@@ -1,21 +1,21 @@
-const crypto =
-  require("crypto");
+import crypto 
+  from "crypto";
 
-const Election =
-  require("../elections/election.model");
+import Election 
+  from "../elections/election.model.js";
 
-const ElectionVoter =
-  require(
-    "../elections/election-voters/electionVoter.model"
-  );
+import ElectionVoter 
+  from 
+    "../elections/election-voters/electionVoter.model.js"
+  ;
 
-const VotingToken =
-  require("./votingToken.model");
+import VotingToken 
+  from "./votingToken.model.js";
 
-const {writeAudit} = 
-  require("../audit/audit.service");
+import {writeAudit}  
+  from "../audit/audit.service.js";
 
-const Actions = require("../../constants/auditActions");
+import Actions  from "../../constants/auditActions.js";
 
 exports.requestToken =
   async (req, res) => {

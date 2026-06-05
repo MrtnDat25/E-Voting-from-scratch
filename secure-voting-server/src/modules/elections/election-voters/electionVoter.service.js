@@ -1,14 +1,14 @@
-const bcrypt =
-  require("bcryptjs");
+import bcrypt 
+  from "bcryptjs";
 
-const User =
-  require("../../users/user.model");
+import User 
+  from "../../users/user.model.js";
 
-const ElectionVoter =
-  require("./electionVoter.model");
+import ElectionVoter 
+  from "./electionVoter.model.js";
 
-const Election = 
-  require("../../elections/election.model")
+import Election  
+  from "../../elections/election.model.js"
 
 
 const addVoter =
@@ -110,7 +110,7 @@ const addVoter =
     );
   };
 
-module.exports = {
+export default {
   addVoter,
   removeVoter,
 };

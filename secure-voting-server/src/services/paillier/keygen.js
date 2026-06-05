@@ -2,9 +2,9 @@ const {
   lcm,
   modInverse,
   modPow
-} = require("./math");
+} = import("./math");
 
-function generateKeyPair() {
+export function generateKeyPair() {
 
   const p = 1000003n;
 
@@ -56,6 +56,3 @@ function generateKeyPair() {
   };
 }
 
-module.exports = {
-  generateKeyPair
-};

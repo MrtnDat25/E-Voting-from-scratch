@@ -1,9 +1,9 @@
 const {
   NUM_BITS
 } =
-require("./config");
+import("./config");
 
-function decodeResult(
+export function decodeResult(
   decryptedValue,
   totalCandidates
 ) {
@@ -43,6 +43,6 @@ function decodeResult(
   return results;
 }
 
-module.exports = {
-  decodeResult
-};
+// export default {
+//   decodeResult
+// };

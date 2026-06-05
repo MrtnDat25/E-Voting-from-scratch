@@ -1,4 +1,4 @@
-module.exports = {
+export default {
 
   CREATE_ELECTION:
     "CREATE_ELECTION",

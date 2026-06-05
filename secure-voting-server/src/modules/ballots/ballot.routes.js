@@ -1,8 +1,8 @@
-const express = require("express");
+import express  from "express";
 const router = express.Router();
 
-const controller = require("./ballot.controller");
+import * as  controller from"./ballot.controller.js";
 
 router.post("/", controller.castVote);
 
-module.exports = router;
+export default router;

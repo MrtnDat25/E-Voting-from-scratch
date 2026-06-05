@@ -1,35 +1,35 @@
-const crypto =
-  require("crypto");
+import crypto 
+  from"crypto";
 
-const Ballot =
-  require("./ballot.model");
+import Ballot 
+  from"./ballot.model.js";
 
-const VotingToken =
-  require(
-    "../votingTokens/votingToken.model"
-  );
+import VotingToken 
+  from
+    "../votingTokens/votingToken.model.js"
+  ;
 
-const Election =
-  require(
-    "../elections/election.model"
-  );
+import Election 
+  from
+    "../elections/election.model.js"
+  ;
 
-const {
+import {
   encodeVote
-} =
-  require(
-    "../../services/paillier/encode"
-  );
+} 
+  from
+    "../../services/paillier/encode.js"
+  ;
 
-const {
+import {
   encrypt
-} =
-  require(
-    "../../services/paillier/encrypt"
-  );
+} 
+  from
+    "../../services/paillier/encrypt.js"
+  ;
 
-const {writeAudit} = require("../audit/audit.service");
-const Actions = require("../../constants/auditActions");
+import {writeAudit}  from"../audit/audit.service.js";
+import Actions  from"../../constants/auditActions.js";
 exports.castVote =
   async (req, res) => {
 

@@ -1,11 +1,11 @@
-const service =
-    require("./electionVoter.service");
-const {
+import service
+    from"./electionVoter.service.js";
+import {
   writeAudit
-} = require("../../audit/audit.service");
+} from"../../audit/audit.service.js";
 
-const Actions =
-  require("../../../constants/auditActions");
+import Actions
+  from"../../../constants/auditActions.js";
 
     
   const addVoter =
@@ -92,7 +92,7 @@ const Actions =
       });
     }
   };
-module.exports = {
+export default {
   addVoter,
   getElectionVoters,
   removeVoter

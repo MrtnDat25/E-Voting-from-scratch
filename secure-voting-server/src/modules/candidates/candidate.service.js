@@ -1,7 +1,7 @@
-const Candidate = require("./candidate.model");
-const User = require("../users/user.model");
-const Election = require("../elections/election.model");
-const bcrypt = require("bcryptjs");
+import Candidate from "./candidate.model.js";
+import User from "../users/user.model.js";
+import Election from "../elections/election.model.js";
+import bcrypt from "bcryptjs";
 
 const createCandidate = async (data) => {
   const {
@@ -68,7 +68,7 @@ const getCandidates = async (electionId) => {
   });
 };
 
-module.exports = {
+export default {
   createCandidate,
   getCandidates,
 };

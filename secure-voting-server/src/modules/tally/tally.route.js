@@ -1,16 +1,14 @@
-const express = require("express")
+import express  from"express";
 const router = express.Router();
-const auth =
-  require(
-    "../../middleware/auth.middleware"
-  );
+import auth from 
+    "../../middleware/auth.middleware.js"
+  ;
 
-const roles =
-  require(
-    "../../middleware/role.middleware"
-  );
+import roles from
+    "../../middleware/role.middleware.js"
+  ;
 
-const controller = require("./tally.controller");
+import controller  from"./tally.controller.js";
 router.post(
   "/:id/tally",
   auth,
@@ -18,4 +16,4 @@ router.post(
   controller.tally
 );
 
-module.exports =router;
+export default router;

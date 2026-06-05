@@ -17,6 +17,6 @@ const ELECTION_STATUS = {
   ARCHIVED: "archived",
 };
 
-module.exports = {
+export default {
   ELECTION_STATUS,
 };

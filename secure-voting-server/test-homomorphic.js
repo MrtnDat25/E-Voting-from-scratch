@@ -1,42 +1,42 @@
 const {
   generateKeyPair
 } =
-require(
+import(
 "./src/services/paillier/keygen"
 );
 
 const {
   encrypt
 } =
-require(
+import(
 "./src/services/paillier/encrypt"
 );
 
 const {
   decrypt
 } =
-require(
+import(
 "./src/services/paillier/decrypt"
 );
 
 const {
   encodeVote
 } =
-require(
+import(
 "./src/services/paillier/encode"
 );
 
 const {
   aggregateVotes
 } =
-require(
+import(
 "./src/services/paillier/aggregate"
 );
 
 const {
   decodeResult
 } =
-require(
+import(
 "./src/services/paillier/decode"
 );
 

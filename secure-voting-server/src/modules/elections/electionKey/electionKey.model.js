@@ -1,5 +1,5 @@
-const mongoose =
-require("mongoose");
+import mongoose 
+from "mongoose";
 
 const schema =
 new mongoose.Schema({
@@ -11,25 +11,25 @@ new mongoose.Schema({
       .Types
       .ObjectId,
     ref:"Election",
-    required:true,
+    importd:true,
     unique:true
   },
 
   lambda:{
     type:String,
-    required:true
+    importd:true
   },
 
   mu:{
     type:String,
-    required:true
+    importd:true
   }
 
 },{
   timestamps:true
 });
 
-module.exports =
+export default
 mongoose.model(
   "ElectionKey",
   schema

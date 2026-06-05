@@ -1,27 +1,43 @@
-// src/blockchain/contract.js
-const { ethers } = require( "ethers");
-// if using CommonJS, use: const { ethers } = require("ethers");
+import dotenv from "dotenv";
+dotenv.config();
+import { ethers } from "ethers";
+import fs from "fs";
+import path from "path";
 
-// const the artifact JSON
+// Load artifact
+const artifactPath = path.resolve(
+  "artifacts/contracts/SecureVoting.sol/SecureVoting.json"
+);
 
-const ElectionArtifact = require( "../../artifacts/contracts/SecureVoting.sol/SecureVoting.json");
-// if CommonJS: const ElectionArtifact = require("../artifacts/contracts/SecureVoting.sol/SecureVoting.json");
+const ElectionArtifact = JSON.parse(
+  fs.readFileSync(artifactPath, "utf8")
+);
 
+// Kiểm tra env
+const address = process.env.CONTRACT_ADDRESS;
 
-const provider = new ethers.JsonRpcProvider("http://127.0.0.1:8545");
+if (!address) {
+  throw new Error("CONTRACT_ADDRESS is missing in .env");
+}
 
+// Provider
+const provider = new ethers.JsonRpcProvider(
+  "http://127.0.0.1:8545"
+);
+
+// Contract read-only
 const contract = new ethers.Contract(
-  process.env.CONTRACT_ADDRESS,
+  address,
   ElectionArtifact.abi,
   provider
 );
 
+// Contract có signer
 async function getContractWithSigner() {
-  const signer = await provider.getSigner(0);
+  const signer = await provider.getSigner();
   return contract.connect(signer);
 }
 
-module.exports = {
-  contract,
-  getContractWithSigner,
-};
+console.log("ENV =", process.env.CONTRACT_ADDRESS);
+
+export { contract, getContractWithSigner };

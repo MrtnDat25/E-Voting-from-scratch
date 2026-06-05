@@ -1,12 +1,12 @@
 const crypto =
-require("crypto");
+import("crypto");
 
 const {
   gcd,
   modPow
-} = require("./math");
+} = import("./math");
 
-function encrypt(
+export function encrypt(
   plaintext,
   publicKey
 ) {
@@ -59,6 +59,6 @@ function encrypt(
   return c.toString();
 }
 
-module.exports = {
-  encrypt
-};
+// export default {
+//   encrypt
+// };

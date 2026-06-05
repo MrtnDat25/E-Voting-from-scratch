@@ -1,28 +1,28 @@
-import { ethers } from "hardhat";
+// import { ethers } from "hardhat";
 
-async function main() {
+// async function main() {
 
-  const Voting =
-    await ethers.getContractFactory(
-      "SecureVoting"
-    );
+//   const Voting =
+//     await ethers.getContractFactory(
+//       "SecureVoting"
+//     );
 
-  const voting =
-    await Voting.deploy();
+//   const voting =
+//     await Voting.deploy();
 
-  await voting.waitForDeployment();
+//   await voting.waitForDeployment();
 
-  console.log(
-    "Contract:",
-    await voting.getAddress()
-  );
-}
+//   console.log(
+//     "Contract:",
+//     await voting.getAddress()
+//   );
+// }
 
-main().catch(
-  (error) => {
+// main().catch(
+//   (error) => {
 
-    console.error(error);
+//     console.error(error);
 
-    process.exitCode = 1;
-  }
-);
+//     process.exitCode = 1;
+//   }
+// );

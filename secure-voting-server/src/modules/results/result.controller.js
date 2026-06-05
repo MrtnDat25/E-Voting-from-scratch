@@ -1,5 +1,5 @@
-const ElectionResult =
-require("./result.model");
+import ElectionResult 
+from "./result.model.js";
 
 exports.getResult =
 async (req, res) => {

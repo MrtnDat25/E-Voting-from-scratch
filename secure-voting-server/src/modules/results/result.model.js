@@ -1,5 +1,4 @@
-const mongoose =
-require("mongoose");
+import mongoose from ("mongoose");
 
 const resultSchema =
 new mongoose.Schema({
@@ -8,18 +7,18 @@ new mongoose.Schema({
     type:
       mongoose.Schema.Types.ObjectId,
     ref:"Election",
-    required:true,
+    importd:true,
     unique:true
   },
 
   encryptedTotal:{
     type:String,
-    required:true
+    importd:true
   },
 
   decryptedTotal:{
     type:String,
-    required:true
+    importd:true
   },
 
   results:[{
@@ -49,7 +48,7 @@ new mongoose.Schema({
 
 });
 
-module.exports =
+export default
 mongoose.model(
   "ElectionResult",
   resultSchema

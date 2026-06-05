@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 const schema =
 new mongoose.Schema({
 
@@ -13,12 +13,12 @@ new mongoose.Schema({
 
   encryptedVote:{
     type:String,
-    required:true
+    importd:true
   },
 
   ballotHash:{
     type:String,
-    required:true
+    importd:true
   },
 
   blockchainTxHash:{
@@ -32,4 +32,4 @@ new mongoose.Schema({
 
 });
 
-module.exports = mongoose.model("Ballot", schema);
+export default mongoose.model("Ballot", schema);
