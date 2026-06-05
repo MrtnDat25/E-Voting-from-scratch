@@ -13,7 +13,11 @@ const { nanoid } =
 const { ELECTION_STATUS } =
   require("./election.constants");
 
-  console.log(ELECTION_STATUS);
+  console.log(ELECTION_STATUS); 
+
+const crypto = require("crypto");
+const { getContractWithSigner } = require("../../blockchain/contract");
+
 
 
 const {
@@ -35,6 +39,42 @@ const createElection =
           req.user,
           req.body
         );
+      const hash =
+        crypto
+        .createHash("sha256")
+        .update(
+
+            JSON.stringify({
+
+                title: election.title,  
+
+                startTime: election.startTime,
+
+                endTime: election.endTime
+
+            })
+
+        )
+        .digest("hex");
+        const electionHash ="0x" + hash;
+        const chainElectionId = BigInt("0x" + hash.slice(0, 16));
+          const contractWithSigner = await getContractWithSigner();
+          const tx = await contractWithSigner.createElection(
+              chainElectionId,
+              electionHash
+            );
+          const receipt =
+              await tx.wait();
+          election.blockchain = {
+
+              electionHash,
+
+              txHash:
+                  receipt.hash
+
+          };
+
+          await election.save();
 
       await writeAudit({
       actorId: req.user.userId,

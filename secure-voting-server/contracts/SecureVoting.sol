@@ -16,13 +16,11 @@ contract SecureVoting {
         bool closed;
     }
 
-    mapping(
-        uint256 => Election
-    ) public elections;
+    mapping(uint256 => Election)
+        public elections;
 
-    mapping(
-        bytes32 => bool
-    ) public ballotHashes;
+    mapping(bytes32 => bool)
+        public ballotHashes;
 
     event ElectionCreated(
         uint256 electionId,
@@ -40,16 +38,12 @@ contract SecureVoting {
     );
 
     function createElection(
-
         uint256 electionId,
-
         bytes32 electionHash
-
     ) external {
 
-        elections[
-            electionId
-        ] = Election({
+        elections[electionId] =
+        Election({
 
             electionId:
                 electionId,
@@ -74,11 +68,8 @@ contract SecureVoting {
     }
 
     function submitBallot(
-
         uint256 electionId,
-
         bytes32 ballotHash
-
     ) external {
 
         require(
@@ -99,11 +90,8 @@ contract SecureVoting {
     }
 
     function publishResult(
-
         uint256 electionId,
-
         bytes32 resultHash
-
     ) external {
 
         elections[

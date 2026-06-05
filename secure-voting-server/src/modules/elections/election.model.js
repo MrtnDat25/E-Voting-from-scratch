@@ -12,7 +12,7 @@ const electionSchema =
 
         required: true,
       },
-
+      
       title: {
         type: String,
         required: true,
@@ -86,11 +86,16 @@ const electionSchema =
         type: Date,
         required: true,
       },
+      blockchain:{
+        electionHash:String,
+        txHash:String
+      } 
     },
 
     {
       timestamps: true,
-    }
+    },
+    
   );
 
 module.exports =

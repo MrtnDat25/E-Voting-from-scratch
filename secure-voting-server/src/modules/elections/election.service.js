@@ -53,7 +53,7 @@ const createElection = async (
   } = generateKeyPair();
 
   // Generate invite code nếu private
-  let inviteCode = null;
+  let inviteCode = undefined;
 
   if (
     electionType ===
