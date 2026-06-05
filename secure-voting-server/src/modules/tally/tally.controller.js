@@ -9,7 +9,8 @@ const { decrypt } = require("../../services/paillier/decrypt");
 const { decodeResult } = require("../../services/paillier/decode");
 
 const crypto = require("crypto");
-
+const {writeAudit} =  require("../audit/audit.service");
+const Actions = require("../../constants/auditActions");
 exports.tally = async (req, res) => {
   try {
     const election = await Election.findById(req.params.id);
@@ -114,6 +115,26 @@ exports.tally = async (req, res) => {
     await election.save();
 
     // RESPONSE
+        await writeAudit({
+
+      actorId:
+        req.user.userId,
+
+      actorRole:
+        req.user.role,
+
+      electionId:
+        election._id,
+
+      action:
+        Actions.TALLY_RESULT,
+
+      metadata:{
+        resultHash
+      }
+
+    });
+    
     return res.json({
       status: "success",
       winners,

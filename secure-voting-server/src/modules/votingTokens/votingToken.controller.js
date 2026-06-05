@@ -12,6 +12,11 @@ const ElectionVoter =
 const VotingToken =
   require("./votingToken.model");
 
+const {writeAudit} = 
+  require("../audit/audit.service");
+
+const Actions = require("../../constants/auditActions");
+
 exports.requestToken =
   async (req, res) => {
 
@@ -143,6 +148,22 @@ exports.requestToken =
         true;
 
       await voter.save();
+
+      await writeAudit({
+
+        actorId:
+          req.user.userId,
+
+        actorRole:
+          "voter",
+
+        electionId,
+
+        action:
+          Actions.REQUEST_TOKEN
+
+      });
+
 
       return res.json({
         status: "success",

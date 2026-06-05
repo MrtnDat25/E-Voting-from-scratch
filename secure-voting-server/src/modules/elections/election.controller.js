@@ -15,6 +15,13 @@ const { ELECTION_STATUS } =
 
   console.log(ELECTION_STATUS);
 
+
+const {
+  writeAudit,
+} = require("../audit/audit.service");
+
+const Actions =
+  require("../../constants/auditActions");
 /**
  * CREATE ELECTION
  */
@@ -29,6 +36,15 @@ const createElection =
           req.body
         );
 
+      await writeAudit({
+      actorId: req.user.userId,
+      actorRole: req.user.role,
+      electionId: election._id,
+      action: Actions.CREATE_ELECTION,
+      metadata: {
+        title: election.title,
+      },
+    });
       return res.status(201).json({
         status: "success",
         data: election,

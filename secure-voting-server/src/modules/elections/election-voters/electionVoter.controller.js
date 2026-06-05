@@ -1,6 +1,13 @@
-  const service =
+const service =
     require("./electionVoter.service");
+const {
+  writeAudit
+} = require("../../audit/audit.service");
 
+const Actions =
+  require("../../../constants/auditActions");
+
+    
   const addVoter =
     async (req, res) => {
 
@@ -12,6 +19,27 @@
             req.body.email,
             req.body.fullName
           );
+
+          await writeAudit({
+
+        actorId:
+          req.user.userId,
+
+        actorRole:
+          req.user.role,
+
+        electionId:
+          req.body.electionId,
+
+        action:
+          Actions.ADD_VOTER,
+
+        metadata: {
+          voterId:
+            result.voterId
+        }
+
+      });
 
         res.status(201).json({
           status: "success",

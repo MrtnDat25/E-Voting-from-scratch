@@ -122,25 +122,8 @@ const createElection = async (
   return election;
 };
 
-    const changeStatus =
-    async (req,res)=>{
 
-    const election =
-    await Election.findById(
-      req.params.id
-    );
-
-    election.status =
-      req.body.status;
-
-    await election.save();
-
-    res.json({
-      status:"success"
-    });
-
-    };
 module.exports = {
   createElection,
-  changeStatus,
+
 };

@@ -39,6 +39,7 @@
     "xlsx": "^0.18.5"
   },
   "devDependencies": {
+    "hardhat": "^3.8.0",
     "nodemon": "^3.1.14"
   }
 }

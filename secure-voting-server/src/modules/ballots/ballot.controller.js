@@ -28,6 +28,8 @@ const {
     "../../services/paillier/encrypt"
   );
 
+const {writeAudit} = require("../audit/audit.service");
+const Actions = require("../../constants/auditActions");
 exports.castVote =
   async (req, res) => {
 
@@ -119,6 +121,25 @@ exports.castVote =
       votingToken.isUsed = true;
       await votingToken.save();
 
+      await writeAudit({
+
+        actorId:
+          req.user.userId,
+
+        actorRole:
+          "voter",
+
+        electionId,
+
+        action:
+          Actions.CAST_VOTE,
+
+        metadata:{
+          ballotHash
+        }
+
+      });
+      
       return res.json({
         status: "success",
         ballotHash,

@@ -45,6 +45,12 @@ router.use(
  resultRoutes
 );
 
+router.use(
+ "/audit",
+ require(
+ "../modules/audit/audit.route"
+ )
+);
 // router.use(
 //   "/voters",
 //   require("../modules/voters/voter.routes")
