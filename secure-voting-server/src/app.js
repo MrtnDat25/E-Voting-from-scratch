@@ -1,12 +1,12 @@
-import express  from"express";
+import express  from "express";
 
-import cors  from"cors";
+import cors  from "cors";
 
-import helmet  from"helmet";
+import helmet  from "helmet";
 
-import morgan  from"morgan";
+import morgan  from "morgan";
 
-import cookieParser  from
+import cookieParser  from 
   "cookie-parser"
 ;
 
@@ -17,7 +17,8 @@ import connectDB  from
 import routes  from
   "./routes/index.js"
 ;
-
+import resultRoutes from "./modules/results/result.route.js";
+import tallyRoutes from "./modules/tally/tally.route.js";
 const app = express();
 
 connectDB();
@@ -38,7 +39,7 @@ app.use(express.urlencoded({
 app.use(cookieParser());
 
 app.use("/api", routes);
-app.use("/api/results", import("./modules/results/result.route"));
-app.use("/api/tally", import("./modules/tally/tally.route"));
+app.use("/api/results", resultRoutes);
+app.use("/api/tally", tallyRoutes);
 
 export default app;

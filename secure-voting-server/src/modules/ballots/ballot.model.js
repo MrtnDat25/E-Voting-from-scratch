@@ -16,14 +16,22 @@ new mongoose.Schema({
     importd:true
   },
 
-  ballotHash:{
+  blockchain:{
+
+    ballotHash:{
     type:String,
     importd:true
+    },
+    
+    txHash:{
+    type:String
+    } 
   },
 
   blockchainTxHash:{
     type:String
   },
+
 
   votedAt:{
     type:Date,

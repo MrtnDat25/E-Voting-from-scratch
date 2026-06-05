@@ -15,7 +15,7 @@ import ELECTION_STATUS from "./election.constants.js";
   console.log(ELECTION_STATUS); 
 
 import crypto  from "crypto";
-import { getContractWithSigner }  from "../../blockchain/contract.js";
+import { contract } from "../../blockchain/contract.js";
 
 
 import {
@@ -54,12 +54,13 @@ const createElection =
         )
         .digest("hex");
         const electionHash ="0x" + hash;
-        const chainElectionId = BigInt("0x" + hash.slice(0, 16));
-          const contractWithSigner = await getContractWithSigner();
-          const tx = await contractWithSigner.createElection(
-              chainElectionId,
-              electionHash
-            );
+        const chainElectionId = BigInt(
+          "0x" + crypto.randomBytes(8).toString("hex")
+        );
+        const tx = await contract.createElection(
+          chainElectionId,
+          electionHash
+        );
           const receipt =
               await tx.wait();
           election.blockchain = {

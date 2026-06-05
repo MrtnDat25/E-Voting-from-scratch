@@ -1,190 +1,176 @@
-import crypto 
-  from "crypto";
+import crypto
+from "crypto";
 
-import Election 
-  from "../elections/election.model.js";
+import Election
+from "../elections/election.model.js";
 
-import ElectionVoter 
-  from 
-    "../elections/election-voters/electionVoter.model.js"
-  ;
+import ElectionVoter
+from "../elections/election-voters/electionVoter.model.js";
 
-import VotingToken 
-  from "./votingToken.model.js";
+import VotingToken
+from "./votingToken.model.js";
 
-import {writeAudit}  
-  from "../audit/audit.service.js";
+import {
+	writeAudit
+}
+from "../audit/audit.service.js";
 
-import Actions  from "../../constants/auditActions.js";
+import Actions from "../../constants/auditActions.js";
 
-exports.requestToken =
-  async (req, res) => {
+export const requestToken =
+	async (req, res) => {
 
-    try {
+		try {
 
-      const {
-        electionId
-      } = req.body;
+			const {
+				electionId
+			} = req.body;
 
-      const election =
-        await Election.findById(
-          electionId
-        );
+			const election =
+				await Election.findById(
+					electionId
+				);
 
-      if (!election) {
-        return res.status(404).json({
-          status: "error",
-          message:
-            "Election not found",
-        });
-      }
+			if (!election) {
+				return res.status(404).json({
+					status: "error",
+					message: "Election not found",
+				});
+			}
 
-      if (
-        election.status !==
-        "voting_open"
-      ) {
-        return res.status(400).json({
-          status: "error",
-          message:
-            "Voting is not open",
-        });
-      }
+			if (
+				election.status !==
+				"voting_open"
+			) {
+				return res.status(400).json({
+					status: "error",
+					message: "Voting is not open",
+				});
+			}
 
-      console.log(
-        "electionId:",
-        electionId
-      );
+			console.log(
+				"electionId:",
+				electionId
+			);
 
-      console.log(
-        "userId:",
-        req.user.userId
-      );
+			console.log(
+				"userId:",
+				req.user.userId
+			);
 
-      console.log(
-        "query =",
-        {
-          electionId,
-          voterId:
-            req.user.userId,
-        }
-      );
+			console.log(
+				"query =", {
+					electionId,
+					voterId: req.user.userId,
+				}
+			);
 
-      const allVoters =
-        await ElectionVoter.find({
-          electionId
-        });
+			const allVoters =
+				await ElectionVoter.find({
+					electionId
+				});
 
-      console.log(
-        JSON.stringify(
-          allVoters,
-          null,
-          2
-        )
-      );
+			console.log(
+				JSON.stringify(
+					allVoters,
+					null,
+					2
+				)
+			);
 
-      let voter =
-        await ElectionVoter.findOne({
-          electionId,
-          voterId:
-            req.user.userId,
-        });
+			let voter =
+				await ElectionVoter.findOne({
+					electionId,
+					voterId: req.user.userId,
+				});
 
-      console.log(
-        "Election type:",
-        election.electionType
-      );
+			console.log(
+				"Election type:",
+				election.electionType
+			);
 
-      if (!voter) {
+			if (!voter) {
 
-        if (
-          election.electionType ===
-          "private"
-        ) {
+				if (
+					election.electionType ===
+					"private"
+				) {
 
-          return res.status(403).json({
-            status: "error",
-            message:
-              "Not eligible for this election",
-          });
-        }
+					return res.status(403).json({
+						status: "error",
+						message: "Not eligible for this election",
+					});
+				}
 
-        voter =
-          await ElectionVoter.create({
-            electionId,
-            voterId:
-              req.user.userId,
-            isEligible: true,
-          });
-      }
+				voter =
+					await ElectionVoter.create({
+						electionId,
+						voterId: req.user.userId,
+						isEligible: true,
+					});
+			}
 
-      if (
-        voter.hasRequestedToken
-      ) {
-        return res.status(400).json({
-          status: "error",
-          message:
-            "Token already issued",
-        });
-      }
+			if (
+				voter.hasRequestedToken
+			) {
+				return res.status(400).json({
+					status: "error",
+					message: "Token already issued",
+				});
+			}
 
-      const token =
-        crypto
-          .randomBytes(32)
-          .toString("hex");
+			const token =
+				crypto
+				.randomBytes(32)
+				.toString("hex");
 
-      await VotingToken.create({
-        electionId,
-        voterId:
-          req.user.userId,
-        token,
-        expiresAt:
-          new Date(
-            Date.now() +
-            30 * 60 * 1000
-          ),
-      });
+			await VotingToken.create({
+				electionId,
+				voterId: req.user.userId,
+				token,
+				expiresAt: new Date(
+					Date.now() +
+					30 * 60 * 1000
+				),
+			});
 
-      voter.hasRequestedToken =
-        true;
+			voter.hasRequestedToken =
+				true;
 
-      await voter.save();
+			await voter.save();
 
-      await writeAudit({
+			await writeAudit({
 
-        actorId:
-          req.user.userId,
+				actorId: req.user.userId,
 
-        actorRole:
-          "voter",
+				actorRole: "voter",
 
-        electionId,
+				electionId,
 
-        action:
-          Actions.REQUEST_TOKEN
+				action: Actions.REQUEST_TOKEN
 
-      });
+			});
 
 
-      return res.json({
-        status: "success",
-        token,
-      });
+			return res.json({
+				status: "success",
+				token,
+			});
 
-    } catch (err) {
+		} catch (err) {
 
-      console.error(
-        "TOKEN ERROR:",
-        err
-      );
+			console.error(
+				"TOKEN ERROR:",
+				err
+			);
 
-      console.error(
-        err.stack
-      );
+			console.error(
+				err.stack
+			);
 
-      return res.status(500).json({
-        status: "error",
-        message:
-          err.message,
-      });
-    }
-  };
+			return res.status(500).json({
+				status: "error",
+				message: err.message,
+			});
+		}
+	};

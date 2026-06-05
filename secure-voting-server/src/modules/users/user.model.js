@@ -1,64 +1,62 @@
-import mongoose from
-  "mongoose"
-;
+import mongoose from "mongoose";
 
 const userSchema =
-  new mongoose.Schema({
+	new mongoose.Schema({
 
-    email: {
-      type: String,
-      importd: true,
-      unique: true,
-      lowercase: true,
-      trim: true,
-    },
+		email: {
+			type: String,
+			importd: true,
+			unique: true,
+			lowercase: true,
+			trim: true,
+		},
 
-    passwordHash: {
-      type: String,
-      importd: true,
-    },
+		passwordHash: {
+			type: String,
+			importd: true,
+		},
 
-    role: {
-      type: String,
-      enum: [
-        "company",
-        "candidate",
-        "voter",
-      ],
-      importd: true,
-    },
+		role: {
+			type: String,
+			enum: [
+				"company",
+				"candidate",
+				"voter",
+			],
+			importd: true,
+		},
 
-    fullName: {
-      type: String,
-      importd: true,
-    },
+		fullName: {
+			type: String,
+			importd: true,
+		},
 
-    walletAddress: {
-      type: String,
-      unique: true,
-      sparse: true,
-    },
+		walletAddress: {
+			type: String,
+			unique: true,
+			sparse: true,
+		},
 
-    isVerified: {
-      type: Boolean,
-      default: false,
-    },
+		isVerified: {
+			type: Boolean,
+			default: false,
+		},
 
-    refreshToken: {
-      type: String,
-      default: null,
-    },
+		refreshToken: {
+			type: String,
+			default: null,
+		},
 
-    lastLogin: {
-      type: Date,
-    },
+		lastLogin: {
+			type: Date,
+		},
 
-  }, {
-    timestamps: true,
-  });
+	}, {
+		timestamps: true,
+	});
 
 export default
-  mongoose.model(
-    "User",
-    userSchema
-  );
+mongoose.model(
+	"User",
+	userSchema
+);

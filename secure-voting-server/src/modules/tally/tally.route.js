@@ -8,7 +8,7 @@ import roles from
     "../../middleware/role.middleware.js"
   ;
 
-import controller  from"./tally.controller.js";
+import * as controller  from"./tally.controller.js";
 router.post(
   "/:id/tally",
   auth,

@@ -1,7 +1,7 @@
 import ElectionResult 
 from "./result.model.js";
 
-exports.getResult =
+export const getResult =
 async (req, res) => {
 
   try {

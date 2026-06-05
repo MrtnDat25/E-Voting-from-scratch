@@ -1,13 +1,14 @@
 import express from "express";
 const router = express.Router();
 
-import * as AuthRoutes from "../modules/auth/auth.routes.js";
+import  AuthRoutes from "../modules/auth/auth.routes.js";
 import electionRoutes from "../modules/elections/election.routes.js";
 import candidateRoutes from "../modules/candidates/candidate.routes.js";
 import voterRoutes from "../modules/elections/election-voters/electionVoter.routes.js";
 import tokenRoutes from "../modules/votingTokens/votingToken.route.js";
 import ballotRoutes from "../modules/ballots/ballot.routes.js";
 import resultRoutes from "../modules/results/result.route.js";
+import auditRoutes from "../modules/audit/audit.route.js"
 
 router.use("/auth", AuthRoutes);
 router.use("/elections", electionRoutes);

@@ -8,10 +8,11 @@ import { aggregateVotes } from "../../services/paillier/aggregate.js";
 import { decrypt } from "../../services/paillier/decrypt.js";
 import { decodeResult } from "../../services/paillier/decode.js";
 
-import crypto from "crypto.js";
+import crypto from "crypto";
 import {writeAudit} from "../audit/audit.service.js";
 import Actions from "../../constants/auditActions.js";
-exports.tally = async (req, res) => {
+import router from "./tally.route.js";
+export const tally = async (req, res) => {
   try {
     const election = await Election.findById(req.params.id);
 

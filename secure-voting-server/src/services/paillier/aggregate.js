@@ -1,30 +1,15 @@
-export function aggregateVotes(
-  encryptedVotes,
-  n
-) {
-
-  const nSq =
-    BigInt(n) *
-    BigInt(n);
+export function aggregateVotes(encryptedVotes, n) {
+  const modulus = BigInt(n);
+  const nSq = modulus * modulus;
 
   let total = 1n;
 
-  for (
-    const vote
-    of encryptedVotes
-  ) {
+  for (const vote of encryptedVotes) {
+    if (!vote) continue;
 
-    total =
-      (
-        total *
-        BigInt(vote)
-      ) % nSq;
-
+    const v = BigInt(vote.toString());
+    total = (total * v) % nSq;
   }
 
   return total.toString();
 }
-
-// export default {
-//   aggregateVotes
-// };

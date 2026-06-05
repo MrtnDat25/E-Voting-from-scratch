@@ -15,4 +15,4 @@ router.get(
  controller.getLogs
 );
 
-// export default router;
+ export default router;

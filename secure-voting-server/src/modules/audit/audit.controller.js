@@ -1,6 +1,6 @@
 import AuditLog  from"./audit.model.js"
 
-exports.getLogs =
+export const getLogs =
 async (req,res)=>{
 
   try{

@@ -1,8 +1,13 @@
-import dotenv from "dotenv";
+import { contract }
+from "./src/blockchain/contract.js";
 
-dotenv.config();
+const tx =
+  await contract.createElection(
+    1,
+    "0x1111111111111111111111111111111111111111111111111111111111111111"
+  );
 
-import { contract } from "./src/blockchain/contract.js";
+const receipt =
+  await tx.wait();
 
-console.log(await contract.getAddress());
-console.log(process.env.CONTRACT_ADDRESS);
+console.log(receipt.hash);

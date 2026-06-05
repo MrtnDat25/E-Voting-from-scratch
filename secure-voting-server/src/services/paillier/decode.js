@@ -1,7 +1,7 @@
-const {
+import {
   NUM_BITS
-} =
-import("./config");
+} 
+from "./config.js";
 
 export function decodeResult(
   decryptedValue,

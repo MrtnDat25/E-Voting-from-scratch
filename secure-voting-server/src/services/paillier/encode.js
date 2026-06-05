@@ -1,19 +1,18 @@
-const {
-  NUM_BITS
-} =
-import("./config");
+import {
+	NUM_BITS
+} from "./config.js";
 
 export function encodeVote(
-  candidateIndex
+	candidateIndex
 ) {
 
-  return (
-    1n <<
-    BigInt(
-      candidateIndex *
-      NUM_BITS
-    )
-  );
+	return (
+		1n <<
+		BigInt(
+			candidateIndex *
+			NUM_BITS
+		)
+	);
 
 }
 
