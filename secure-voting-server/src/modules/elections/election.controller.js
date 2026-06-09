@@ -23,6 +23,13 @@ import {
 }  from "../audit/audit.service.js";
 import Actions 
   from "../../constants/auditActions.js";
+
+
+import VotingToken
+from "../votingTokens/votingToken.model.js";
+
+import Ballot
+from "../ballots/ballot.model.js";
 /**
  * CREATE ELECTION
  */
@@ -293,10 +300,79 @@ const changeStatus =
     }
   };
 
+export const getElectionStats =
+async (req,res)=>{
+
+  try{
+
+    const electionId =
+      req.params.id;
+
+    const totalVoters =
+      await ElectionVoter.countDocuments({
+        electionId
+      });
+
+    const requestedTokens =
+      await ElectionVoter.countDocuments({
+        electionId,
+        hasRequestedToken:true
+      });
+
+    const voted =
+      await ElectionVoter.countDocuments({
+        electionId,
+        hasVoted:true
+      });
+
+    const turnoutRate =
+      totalVoters === 0
+      ? 0
+      : (
+          voted /
+          totalVoters *
+          100
+        ).toFixed(2);
+
+    return res.json({
+
+      status:"success",
+
+      data:{
+
+        totalVoters,
+
+        requestedTokens,
+
+        voted,
+
+        turnoutRate
+
+      }
+
+    });
+
+  }
+  catch(err){
+
+    return res.status(500).json({
+
+      status:"error",
+
+      message:
+        err.message
+
+    });
+
+  }
+
+};
+
 export default {
   createElection,
   getPublicElections,
   joinElection,
   myElection,
   changeStatus,
+  getElectionStats
 };

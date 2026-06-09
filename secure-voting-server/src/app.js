@@ -21,6 +21,10 @@ import resultRoutes from "./modules/results/result.route.js";
 import tallyRoutes from "./modules/tally/tally.route.js";
 import dashboardRoutes
 from "./modules/dashboard/dashboard.route.js";
+
+import blockchainRoutes
+from "./blockchain/blockchain.route.js";
+
 const app = express();
 
 connectDB();
@@ -46,6 +50,10 @@ app.use("/api/tally", tallyRoutes);
 app.use(
   "/api/dashboard",
   dashboardRoutes
+);
+app.use(
+  "/api/blockchain",
+  blockchainRoutes
 );
 
 

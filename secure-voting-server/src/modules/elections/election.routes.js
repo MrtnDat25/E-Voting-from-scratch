@@ -56,5 +56,10 @@ router.get(
   "/:id/stats",
   getElectionStats
 );
-
+router.get(
+  "/:id/stats",
+  auth,
+  roles("company"),
+  controller.getElectionStats
+);
 export default router;
