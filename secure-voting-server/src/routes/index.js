@@ -10,6 +10,9 @@ import ballotRoutes from "../modules/ballots/ballot.routes.js";
 import resultRoutes from "../modules/results/result.route.js";
 import auditRoutes from "../modules/audit/audit.route.js"
 
+import dashboardRoutes
+from "../modules/dashboard/dashboard.route.js";
+
 router.use("/auth", AuthRoutes);
 router.use("/elections", electionRoutes);
 router.use("/candidates", candidateRoutes);
@@ -19,6 +22,11 @@ router.use("/ballots", ballotRoutes);
 router.use("/results", resultRoutes);
 router.use("/audit", auditRoutes);
 
+
+router.use(
+  "/api/dashboard",
+  dashboardRoutes
+);
 export default router;
 
 // router.use(

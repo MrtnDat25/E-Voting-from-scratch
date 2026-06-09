@@ -19,6 +19,8 @@ import routes  from
 ;
 import resultRoutes from "./modules/results/result.route.js";
 import tallyRoutes from "./modules/tally/tally.route.js";
+import dashboardRoutes
+from "./modules/dashboard/dashboard.route.js";
 const app = express();
 
 connectDB();
@@ -41,5 +43,10 @@ app.use(cookieParser());
 app.use("/api", routes);
 app.use("/api/results", resultRoutes);
 app.use("/api/tally", tallyRoutes);
+app.use(
+  "/api/dashboard",
+  dashboardRoutes
+);
+
 
 export default app;
