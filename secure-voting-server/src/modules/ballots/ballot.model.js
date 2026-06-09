@@ -13,14 +13,14 @@ new mongoose.Schema({
 
   encryptedVote:{
     type:String,
-    importd:true
+    required:true
   },
 
   blockchain:{
 
     ballotHash:{
     type:String,
-    importd:true
+    required:true
     },
     
     txHash:{
@@ -38,6 +38,16 @@ new mongoose.Schema({
     default:Date.now
   }
 
+  
+  
 });
+schema.index(
+  {
+    "blockchain.ballotHash": 1,
+  },
+  {
+    unique: true,
+  }
+);
 
 export default mongoose.model("Ballot", schema);

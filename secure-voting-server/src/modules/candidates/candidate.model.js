@@ -1,77 +1,89 @@
-import mongoose  from "mongoose";
+import mongoose from "mongoose";
 
-const embeddedLinkSchema =
-  new mongoose.Schema({
-    title: String,
-    url: String,
+const embeddedLinkSchema = new mongoose.Schema({
+  title: String,
 
-    type: {
+  url: {
+    type: String,
+    match: /^https?:\/\/.+/,
+  },
+
+  type: {
+    type: String,
+    enum: ["video", "article", "other"],
+    default: "other",
+  },
+});
+
+const candidateSchema = new mongoose.Schema(
+  {
+    electionId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Election",
+      required: true,
+    },
+
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      default: null,
+    },
+
+    email: {
       type: String,
-
-      enum: [
-        "video",
-        "article",
-        "other",
-      ],
+      required: true,
+      trim: true,
+      lowercase: true,
     },
-  });
 
-const candidateSchema =
-  new mongoose.Schema(
-    {
-      electionId: {
-        type:
-          mongoose.Schema.Types.ObjectId,
-
-        ref: "Election",
-
-        importd: true,
-      },
-
-      userId: {
-        type:
-          mongoose.Schema.Types.ObjectId,
-
-        ref: "User",
-
-        default: null,
-      },
-
-      email: {
-        type: String,
-        importd: true,
-      },
-
-      name: {
-        type: String,
-        importd: true,
-      },
-
-      avatar: String,
-
-      bio: String,
-
-      embeddedLinks: [
-        embeddedLinkSchema,
-      ],
-
-      candidateIndexOnChain: {
-        type: Number,
-        importd: true,
-      },
-
-      cachedVoteCount: {
-        type: Number,
-        default: 0,
-      },
+    name: {
+      type: String,
+      required: true,
+      trim: true,
     },
-    {
-      timestamps: true,
-    }
-  );
 
-export default
-  mongoose.model(
-    "Candidate",
-    candidateSchema
-  );
+    avatar: String,
+
+    bio: String,
+
+    embeddedLinks: [embeddedLinkSchema],
+
+    candidateIndexOnChain: {
+      type: Number,
+      required: true,
+    },
+
+    cachedVoteCount: {
+      type: Number,
+      default: 0,
+    },
+  },
+  {
+    timestamps: true,
+  }
+);
+
+candidateSchema.index(
+  {
+    electionId: 1,
+    candidateIndexOnChain: 1,
+  },
+  {
+    unique: true,
+  }
+);
+
+candidateSchema.index(
+  {
+    electionId: 1,
+    email: 1,
+  },
+  {
+    unique: true,
+  }
+);
+
+export default mongoose.model(
+  "Candidate",
+  candidateSchema
+);

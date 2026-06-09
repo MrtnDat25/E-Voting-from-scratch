@@ -9,12 +9,12 @@ const electionSchema =
 
         ref: "User",
 
-        importd: true,
+        required: true,
       },
       
       title: {
         type: String,
-        importd: true,
+        required: true,
       },
 
       description: {
@@ -29,7 +29,7 @@ const electionSchema =
           "private",
         ],
 
-        importd: true,
+        required: true,
       },
 
       inviteCode: {
@@ -59,12 +59,12 @@ const electionSchema =
       paillierPublicKey: {
         n: {
           type: String,
-          importd: true,
+          required: true,
         },
 
         g: {
           type: String,
-          importd: true,
+          required: true,
         },
       },
 
@@ -78,12 +78,15 @@ const electionSchema =
 
       startTime: {
         type: Date,
-        importd: true,
+        required: true,
       },
 
       endTime: {
         type: Date,
-        importd: true,
+        required: true,
+      },
+      chainElectionId: {
+      type: String,
       },
       blockchain:{
         electionHash:String,

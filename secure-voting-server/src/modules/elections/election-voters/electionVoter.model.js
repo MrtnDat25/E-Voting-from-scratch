@@ -1,4 +1,4 @@
-import mongoose   from "mongoose";
+import mongoose from "mongoose";
 
 const electionVoterSchema =
   new mongoose.Schema(
@@ -6,19 +6,15 @@ const electionVoterSchema =
       electionId: {
         type:
           mongoose.Schema.Types.ObjectId,
-
         ref: "Election",
-
-        importd: true,
+        required: true,
       },
 
       voterId: {
         type:
           mongoose.Schema.Types.ObjectId,
-
         ref: "User",
-
-        importd: true,
+        required: true,
       },
 
       isEligible: {
@@ -26,9 +22,14 @@ const electionVoterSchema =
         default: true,
       },
 
-      hasRequestedToken: {
-        type: Boolean,
-        default: false,
+      // hasRequestedToken: {
+      //   type: Boolean,
+      //   default: false,
+      // },
+
+      votingTokenHash: {
+        type: String,
+        default: null,
       },
 
       hasVoted: {
@@ -36,14 +37,24 @@ const electionVoterSchema =
         default: false,
       },
 
-      registeredAt: {
-        type: Date,
-        default: Date.now,
-      },
-
       votedAt: {
         type: Date,
         default: null,
+      },
+
+      blockchainBallotHash: {
+        type: String,
+        default: null,
+      },
+
+      blockchainTxHash: {
+        type: String,
+        default: null,
+      },
+
+      registeredAt: {
+        type: Date,
+        default: Date.now,
       },
     },
     {
@@ -61,8 +72,7 @@ electionVoterSchema.index(
   }
 );
 
-export default
-  mongoose.model(
-    "ElectionVoter",
-    electionVoterSchema
-  );
+export default mongoose.model(
+  "ElectionVoter",
+  electionVoterSchema
+);

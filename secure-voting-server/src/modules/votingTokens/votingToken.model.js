@@ -4,18 +4,18 @@ const votingTokenSchema = new mongoose.Schema({
 	electionId: {
 		type: mongoose.Schema.Types.ObjectId,
 		ref: "Election",
-		importd: true
+		required: true
 	},
 
 	voterId: {
 		type: mongoose.Schema.Types.ObjectId,
 		ref: "User",
-		importd: true
+		required: true
 	},
 
 	token: {
 		type: String,
-		importd: true,
+		required: true,
 		unique: true
 	},
 
@@ -27,7 +27,7 @@ const votingTokenSchema = new mongoose.Schema({
 
 	expiresAt: {
 		type: Date,
-		importd: true,
+		required: true,
 		// index: true
 	}
 }, {

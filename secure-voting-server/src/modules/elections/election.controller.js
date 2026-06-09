@@ -26,76 +26,83 @@ import Actions
 /**
  * CREATE ELECTION
  */
-const createElection =
-  async (req, res) => {
+const createElection = async (req, res) => {
+  try {
+    // 1. Tạo election trong MongoDB
+    const election = await electionService.createElection(
+      req.user,
+      req.body
+    );
 
-    try {
+    // 2. Sinh electionId cho blockchain
+    const chainElectionId = BigInt(
+      "0x" + crypto.randomBytes(8).toString("hex")
+    );
 
-      const election =
-        await electionService.createElection(
-          req.user,
-          req.body
-        );
-      const hash =
-        crypto
-        .createHash("sha256")
-        .update(
+    // 3. Tạo hash dữ liệu election
+    const electionHash = ethers.keccak256(
+      ethers.toUtf8Bytes(
+        JSON.stringify({
+          title: election.title,
+          description: election.description,
+          startTime: election.startTime,
+          endTime: election.endTime,
+          companyId: election.companyId,
+        })
+      )
+    );
 
-            JSON.stringify({
+    // 4. Ghi blockchain
+    const tx = await contract.createElection(
+      chainElectionId,
+      electionHash
+    );
 
-                title: election.title,  
+    const receipt = await tx.wait();
 
-                startTime: election.startTime,
+    // 5. Lưu thông tin blockchain
+    election.chainElectionId =
+      chainElectionId.toString();
 
-                endTime: election.endTime
+    election.blockchainTxHash =
+      tx.hash;
 
-            })
+    election.electionHashOnChain =
+      electionHash;
 
-        )
-        .digest("hex");
-        const electionHash ="0x" + hash;
-        const chainElectionId = BigInt(
-          "0x" + crypto.randomBytes(8).toString("hex")
-        );
-        const tx = await contract.createElection(
-          chainElectionId,
-          electionHash
-        );
-          const receipt =
-              await tx.wait();
-          election.blockchain = {
+    election.blockchain = {
+      electionHash,
+      txHash: tx.hash,
+    };
 
-              electionHash,
+    await election.save();
 
-              txHash:
-                  receipt.hash
-
-          };
-
-          await election.save();
-
-      await writeAudit({
+    // 6. Audit log
+    await writeAudit({
       actorId: req.user.userId,
       actorRole: req.user.role,
       electionId: election._id,
       action: Actions.CREATE_ELECTION,
       metadata: {
         title: election.title,
+        txHash: tx.hash,
+        blockNumber: receipt.blockNumber,
       },
     });
-      return res.status(201).json({
-        status: "success",
-        data: election,
-      });
 
-    } catch (err) {
+    return res.status(201).json({
+      status: "success",
+      data: election,
+    });
+  } catch (err) {
+    console.error(err);
 
-      return res.status(500).json({
-        status: "error",
-        message: err.message,
-      });
-    }
-  };
+    return res.status(500).json({
+      status: "error",
+      message: err.message,
+    });
+  }
+};
 
 /**
  * GET PUBLIC ELECTIONS

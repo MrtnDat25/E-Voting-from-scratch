@@ -4,23 +4,15 @@ pragma solidity ^0.8.20;
 contract SecureVoting {
 
     struct Election {
-
         uint256 electionId;
-
         address company;
-
         bytes32 electionHash;
-
         bytes32 resultHash;
-
         bool closed;
     }
 
-    mapping(uint256 => Election)
-        public elections;
-
-    mapping(bytes32 => bool)
-        public ballotHashes;
+    mapping(uint256 => Election) public elections;
+    mapping(uint256 => mapping(bytes32 => bool)) public ballotHashes;
 
     event ElectionCreated(
         uint256 electionId,
@@ -42,23 +34,17 @@ contract SecureVoting {
         bytes32 electionHash
     ) external {
 
-        elections[electionId] =
-        Election({
+        require(
+            elections[electionId].company == address(0),
+            "Election already exists"
+        );
 
-            electionId:
-                electionId,
-
-            company:
-                msg.sender,
-
-            electionHash:
-                electionHash,
-
-            resultHash:
-                bytes32(0),
-
-            closed:
-                false
+        elections[electionId] = Election({
+            electionId: electionId,
+            company: msg.sender,
+            electionHash: electionHash,
+            resultHash: bytes32(0),
+            closed: false
         });
 
         emit ElectionCreated(
@@ -73,20 +59,23 @@ contract SecureVoting {
     ) external {
 
         require(
-            !ballotHashes[
-                ballotHash
-            ],
+            elections[electionId].company != address(0),
+            "Election not found"
+        );
+
+        require(
+            !elections[electionId].closed,
+            "Election closed"
+        );
+
+        require(
+            !ballotHashes[electionId][ballotHash],
             "Duplicate ballot"
         );
 
-        ballotHashes[
-            ballotHash
-        ] = true;
+        ballotHashes[electionId][ballotHash] = true;
 
-        emit BallotSubmitted(
-            electionId,
-            ballotHash
-        );
+        emit BallotSubmitted(electionId, ballotHash);
     }
 
     function publishResult(
@@ -94,19 +83,55 @@ contract SecureVoting {
         bytes32 resultHash
     ) external {
 
-        elections[
-            electionId
-        ].resultHash =
-            resultHash;
+        Election storage election =
+            elections[electionId];
 
-        elections[
-            electionId
-        ].closed =
-            true;
+        require(
+            election.company != address(0),
+            "Election not found"
+        );
+
+        require(
+            election.company == msg.sender,
+            "Not owner"
+        );
+
+        require(
+            !election.closed,
+            "Already closed"
+        );
+
+        election.resultHash = resultHash;
+        election.closed = true;
 
         emit ResultPublished(
             electionId,
             resultHash
+        );
+    }
+
+    function getElection(
+        uint256 electionId
+    )
+        external
+        view
+        returns (
+            uint256,
+            address,
+            bytes32,
+            bytes32,
+            bool
+        )
+    {
+        Election memory election =
+            elections[electionId];
+
+        return (
+            election.electionId,
+            election.company,
+            election.electionHash,
+            election.resultHash,
+            election.closed
         );
     }
 }

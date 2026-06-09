@@ -1,0 +1,49 @@
+{
+  "_format": "hh3-sol-build-info-1",
+  "id": "solc-0_8_28-0413aa0cd1624dd8ed3985b1c5ec2972a30fc2ec",
+  "solcVersion": "0.8.28",
+  "solcLongVersion": "0.8.28+commit.7893614a",
+  "compilerType": "solc",
+  "toolVersions": {
+    "hardhat": "3.8.0"
+  },
+  "userSourceNameMap": {
+    "contracts/SecureVoting.sol": "project/contracts/SecureVoting.sol"
+  },
+  "input": {
+    "language": "Solidity",
+    "settings": {
+      "evmVersion": "cancun",
+      "optimizer": {
+        "enabled": true,
+        "runs": 200
+      },
+      "outputSelection": {
+        "*": {
+          "": [
+            "ast"
+          ],
+          "*": [
+            "abi",
+            "evm.bytecode.linkReferences",
+            "evm.bytecode.object",
+            "evm.bytecode.opcodes",
+            "evm.bytecode.sourceMap",
+            "evm.deployedBytecode.immutableReferences",
+            "evm.deployedBytecode.linkReferences",
+            "evm.deployedBytecode.object",
+            "evm.deployedBytecode.opcodes",
+            "evm.deployedBytecode.sourceMap",
+            "evm.methodIdentifiers"
+          ]
+        }
+      },
+      "remappings": []
+    },
+    "sources": {
+      "project/contracts/SecureVoting.sol": {
+        "content": "// SPDX-License-Identifier: MIT\r\npragma solidity ^0.8.20;\r\n\r\ncontract SecureVoting {\r\n\r\n    struct Election {\r\n        uint256 electionId;\r\n        address company;\r\n        bytes32 electionHash;\r\n        bytes32 resultHash;\r\n        bool closed;\r\n    }\r\n\r\n    mapping(uint256 => Election) public elections;\r\n    mapping(uint256 => mapping(bytes32 => bool)) public ballotHashes;\r\n\r\n    event ElectionCreated(\r\n        uint256 electionId,\r\n        bytes32 electionHash\r\n    );\r\n\r\n    event BallotSubmitted(\r\n        uint256 electionId,\r\n        bytes32 ballotHash\r\n    );\r\n\r\n    event ResultPublished(\r\n        uint256 electionId,\r\n        bytes32 resultHash\r\n    );\r\n\r\n    function createElection(\r\n        uint256 electionId,\r\n        bytes32 electionHash\r\n    ) external {\r\n\r\n        require(\r\n            elections[electionId].company == address(0),\r\n            \"Election already exists\"\r\n        );\r\n\r\n        elections[electionId] = Election({\r\n            electionId: electionId,\r\n            company: msg.sender,\r\n            electionHash: electionHash,\r\n            resultHash: bytes32(0),\r\n            closed: false\r\n        });\r\n\r\n        emit ElectionCreated(\r\n            electionId,\r\n            electionHash\r\n        );\r\n    }\r\n\r\n    function submitBallot(\r\n        uint256 electionId,\r\n        bytes32 ballotHash\r\n    ) external {\r\n\r\n        require(\r\n            elections[electionId].company != address(0),\r\n            \"Election not found\"\r\n        );\r\n\r\n        require(\r\n            !elections[electionId].closed,\r\n            \"Election closed\"\r\n        );\r\n\r\n        require(\r\n            !ballotHashes[electionId][ballotHash],\r\n            \"Duplicate ballot\"\r\n        );\r\n\r\n        ballotHashes[electionId][ballotHash] = true;\r\n\r\n        emit BallotSubmitted(electionId, ballotHash);\r\n    }\r\n\r\n    function publishResult(\r\n        uint256 electionId,\r\n        bytes32 resultHash\r\n    ) external {\r\n\r\n        Election storage election =\r\n            elections[electionId];\r\n\r\n        require(\r\n            election.company != address(0),\r\n            \"Election not found\"\r\n        );\r\n\r\n        require(\r\n            election.company == msg.sender,\r\n            \"Not owner\"\r\n        );\r\n\r\n        require(\r\n            !election.closed,\r\n            \"Already closed\"\r\n        );\r\n\r\n        election.resultHash = resultHash;\r\n        election.closed = true;\r\n\r\n        emit ResultPublished(\r\n            electionId,\r\n            resultHash\r\n        );\r\n    }\r\n\r\n    function getElection(\r\n        uint256 electionId\r\n    )\r\n        external\r\n        view\r\n        returns (\r\n            uint256,\r\n            address,\r\n            bytes32,\r\n            bytes32,\r\n            bool\r\n        )\r\n    {\r\n        Election memory election =\r\n            elections[electionId];\r\n\r\n        return (\r\n            election.electionId,\r\n            election.company,\r\n            election.electionHash,\r\n            election.resultHash,\r\n            election.closed\r\n        );\r\n    }\r\n}"
+      }
+    }
+  }
+}
