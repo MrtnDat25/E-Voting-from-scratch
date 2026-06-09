@@ -17,7 +17,10 @@ import controller
   from 
     "./election.controller.js"
   ;
-
+import {
+  getElectionStats
+}
+from "./election.stats.controller.js";
 router.post(
   "/",
 
@@ -48,6 +51,10 @@ router.patch(
  auth,
  roles("company"),
  controller.changeStatus
+);
+router.get(
+  "/:id/stats",
+  getElectionStats
 );
 
 export default router;

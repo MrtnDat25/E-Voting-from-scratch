@@ -5,7 +5,7 @@ const userSchema =
 
 		email: {
 			type: String,
-			importd: true,
+			required: true,
 			unique: true,
 			lowercase: true,
 			trim: true,
@@ -13,7 +13,7 @@ const userSchema =
 
 		passwordHash: {
 			type: String,
-			importd: true,
+			required: true,
 		},
 
 		role: {
@@ -23,12 +23,12 @@ const userSchema =
 				"candidate",
 				"voter",
 			],
-			importd: true,
+			required: true,
 		},
 
 		fullName: {
 			type: String,
-			importd: true,
+			required: true,
 		},
 
 		walletAddress: {

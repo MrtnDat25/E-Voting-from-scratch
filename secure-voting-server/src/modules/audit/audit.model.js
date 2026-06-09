@@ -21,7 +21,7 @@ new mongoose.Schema({
 
   action:{
     type:String,
-    importd:true
+    required:true
   },
 
   metadata:{

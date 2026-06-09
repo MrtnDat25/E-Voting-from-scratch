@@ -7,28 +7,33 @@ new mongoose.Schema({
     type:
       mongoose.Schema.Types.ObjectId,
     ref:"Election",
-    importd:true,
+    required:true,
     unique:true
   },
 
   encryptedTotal:{
     type:String,
-    importd:true
+    required:true
   },
 
   decryptedTotal:{
     type:String,
-    importd:true
+    required:true
   },
 
   results:[{
+
     candidateId:{
       type:
         mongoose.Schema.Types.ObjectId,
       ref:"Candidate"
     },
 
-    votes:Number
+    votes:{
+      type:Number,
+      default:0
+    }
+
   }],
 
   winnerCandidateId:{
@@ -37,15 +42,26 @@ new mongoose.Schema({
     ref:"Candidate"
   },
 
-  resultHash:String,
+  blockchain:{
 
-  blockchainTxHash:String,
+    resultHash:{
+      type:String
+    },
+
+    txHash:{
+      type:String
+    }
+
+  },
 
   publishedAt:{
     type:Date,
     default:Date.now
   }
 
+},
+{
+  timestamps:true
 });
 
 export default

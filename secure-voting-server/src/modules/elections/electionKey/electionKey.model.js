@@ -11,18 +11,18 @@ new mongoose.Schema({
       .Types
       .ObjectId,
     ref:"Election",
-    importd:true,
+    required:true,
     unique:true
   },
 
   lambda:{
     type:String,
-    importd:true
+    required:true
   },
 
   mu:{
     type:String,
-    importd:true
+    required:true
   }
 
 },{

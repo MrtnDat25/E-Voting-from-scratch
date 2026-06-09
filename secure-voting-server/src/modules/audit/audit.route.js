@@ -2,17 +2,20 @@ import express from "express";
 
 const router = express.Router();
 
-import auth from "../../middleware/auth.middleware.js";
+import auth
+from "../../middleware/auth.middleware.js";
 
-import roles from "../../middleware/role.middleware.js";
+import roles
+from "../../middleware/role.middleware.js";
 
-import * as  controller from "./audit.controller.js";
+import * as controller
+from "./audit.controller.js";
 
 router.get(
- "/:electionId",
- auth,
- roles("company"),
- controller.getLogs
+  "/election/:electionId",
+  auth,
+  roles("company"),
+  controller.getLogs
 );
 
- export default router;
+export default router;
