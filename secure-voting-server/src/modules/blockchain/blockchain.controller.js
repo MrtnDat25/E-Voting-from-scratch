@@ -1,7 +1,7 @@
 import { contract }
-from "./contract.js";
+from "../../blockchain/contract.js";
 
-import ElectionResult from "../modules/results/result.model.js";
+import ElectionResult from "../results/result.model.js";
 
 export const verifyElection =
 async (req,res)=>{

@@ -23,7 +23,13 @@ import dashboardRoutes
 from "./modules/dashboard/dashboard.route.js";
 
 import blockchainRoutes
-from "./blockchain/blockchain.route.js";
+from "./modules/blockchain/blockchain.route.js";
+
+import swaggerUi
+from "swagger-ui-express";
+
+import swaggerSpec
+from "./config/swagger.js";
 
 const app = express();
 
@@ -42,6 +48,8 @@ app.use(express.urlencoded({
 }));
 
 
+
+
 app.use(cookieParser());
 
 app.use("/api", routes);
@@ -54,6 +62,12 @@ app.use(
 app.use(
   "/api/blockchain",
   blockchainRoutes
+);
+
+app.use(
+  "/api-docs",
+  swaggerUi.serve,
+  swaggerUi.setup(swaggerSpec)
 );
 
 

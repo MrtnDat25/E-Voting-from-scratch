@@ -17,6 +17,8 @@ import ELECTION_STATUS from "./election.constants.js";
 import crypto  from "crypto";
 import { contract } from "../../blockchain/contract.js";
 
+import { ethers } from "ethers";
+
 
 import {
   writeAudit,
